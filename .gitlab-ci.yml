@@ -1,0 +1,18 @@
+before_script:
+  - echo 'COMMON_VERSION=0.1.4' > .env
+  - echo 'NODE_ENV=production' > .env
+  - echo 'NODE_PATH=/home/ec2-user/node_modules' > .env
+
+stages:
+  - build
+
+build:
+  retry: 2
+  tags:
+    - python
+  stage: build
+  script:
+    - make buildnc
+  only:
+    refs:
+      - merge_request

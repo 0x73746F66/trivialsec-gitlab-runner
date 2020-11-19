@@ -1,0 +1,44 @@
+SET ONREBOOT LASTSTATE
+SET STATEFILE /srv/app/monit.state
+SET IDFILE /srv/app/monit.id
+SET INIT
+
+SET DAEMON 15
+   WITH START DELAY 5
+
+SET TERMINAL BATCH
+SET LOG /opt/monit/monit.log
+
+SET EVENTQUEUE BASEDIR /tmp SLOTS 1000
+
+CHECK SYSTEM "using python base image directly is discouraged"
+    IF 2 RESTARTS WITHIN 3 CYCLES THEN TIMEOUT
+
+SET LIMITS {
+   PROGRAMOUTPUT:     2 MB ,
+   SENDEXPECTBUFFER:  256 B ,
+   FILECONTENTBUFFER: 512 B,
+   HTTPCONTENTBUFFER: 1 MB,
+   NETWORKTIMEOUT:    3 s ,
+   PROGRAMTIMEOUT:    5 s ,
+   STOPTIMEOUT:       30 s ,
+   STARTTIMEOUT:      15 s ,
+   RESTARTTIMEOUT:    15 s
+}
+
+SET HTTPD PORT 2812
+    USE ADDRESS 0.0.0.0
+    ALLOW 0.0.0.0/0.0.0.0
+    SIGNATURE DISABLE
+
+CHECK FILE "application.log"
+    WITH PATH /tmp/application.log
+    DEPENDS on flask
+    IF SIZE > 2 MB THEN EXEC "/usr/sbin/logrotate -l /tmp/application.log"
+    GROUP Logs
+
+CHECK FILE monitrc
+    WITH PATH /srv/app/monitrc
+    IF CHANGED CHECKSUM 
+        THEN EXEC "/opt/monit/bin/monit reload"
+    GROUP Configs

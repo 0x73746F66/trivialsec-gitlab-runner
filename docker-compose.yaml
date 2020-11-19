@@ -1,0 +1,122 @@
+version: '3.6'
+x-defaults: &defaults
+  env_file: .env
+  restart: unless-stopped
+  logging:
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+services:
+  python-base:
+    env_file: .env
+    image: trivialsec/python-base
+    build:
+      context: ./docker/python
+      dockerfile: Dockerfile
+
+  node-base:
+    env_file: .env
+    image: trivialsec/node-base
+    build:
+      context: ./docker/node
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: ${NODE_ENV}
+        NODE_PATH: ${NODE_PATH}
+
+  gitlab-runner:
+    <<: *defaults
+    image: trivialsec/gitlab-runner
+    container_name: gitlab-runner
+    build:
+      context: ./docker/gitlab-runner
+      dockerfile: Dockerfile
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - gitlab-runner-config:/etc/gitlab-runner:rw
+
+  mysql:
+    <<: *defaults
+    image: mysql:8
+    container_name: mysql
+    volumes:
+      - ./mysql_datadir:/var/lib/mysql
+      - ./sql:/tmp/sql
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    security_opt:
+      - seccomp:"./docker/seccomp-mysql.json"
+    networks:
+      trivialsec:
+        aliases:
+          - mysql
+    healthcheck:
+      test: mysqladmin ping -h mysql
+      timeout: 20s
+      retries: 10
+
+  redis:
+    <<: *defaults
+    image: redis:5.0@sha256:e73ef998c22f9a98793d9951bb2915cd945d8fa6f9ec1b324e85d19617efc2fd
+    container_name: redis
+    expose:
+      - 6379
+    volumes:
+      - ./redis_datadir:/data
+    networks:
+      trivialsec:
+        aliases:
+          - redis
+
+  mongo:
+    <<: *defaults
+    image: mongo:4.0@sha256:f0397f249d2ced55ce59c7c50a8490ea536ffe4af4db75801f3443a380b7070a
+    container_name: mongo
+    ports:
+      - 27017:27017
+    expose:
+      - 27017
+    volumes:
+      - ./mongo_datadir:/data/db
+    networks:
+      trivialsec:
+        aliases:
+          - mongo
+
+  search:
+    <<: *defaults
+    image: trivialsec/search
+    container_name: search
+    build:
+      context: ./cve-search
+      dockerfile: Dockerfile
+      args:
+        - RELEASE=2.5
+        - CONF_PATH=configuration-dev.ini
+    ports:
+      - 5180:5180
+    expose:
+      - 5180
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      trivialsec:
+        aliases:
+          - search
+
+networks:
+  trivialsec:
+
+volumes:
+  gitlab-runner-config:
+    external: true
+    name: gitlab-runner-config
