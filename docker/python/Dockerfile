@@ -6,9 +6,9 @@ RUN mkdir -p /usr/share/man/man1mkdir /usr/share/man/man1 && \
     yum install -q -y  deltarpm wget && \
     yum groupinstall -q -y  "Development Tools" && \
     update-ca-trust force-enable && \
-    yum install -q -y https://repo.mysql.com/mysql80-community-release-el7-1.noarch.rpm && \
     wget -q http://repo.mysql.com/RPM-GPG-KEY-mysql -O /tmp/mysql.key && \
     rpm --import /tmp/mysql.key && \
+    yum install -q -y https://repo.mysql.com/mysql80-community-release-el7-1.noarch.rpm && \
     amazon-linux-extras enable python3.8 >/dev/null && \
     yum install -q -y  \
         hostname \
