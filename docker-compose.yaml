@@ -14,6 +14,7 @@ services:
     build:
       context: ./docker/python
       dockerfile: Dockerfile
+      network: host
 
   node-base:
     env_file: .env
@@ -21,6 +22,7 @@ services:
     build:
       context: ./docker/node
       dockerfile: Dockerfile
+      network: host
       args:
         NODE_ENV: ${NODE_ENV}
         NODE_PATH: ${NODE_PATH}
@@ -32,6 +34,7 @@ services:
     build:
       context: ./docker/gitlab-runner
       dockerfile: Dockerfile
+      network: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - gitlab-runner-config:/etc/gitlab-runner:rw
@@ -98,6 +101,7 @@ services:
     build:
       context: ./cve-search
       dockerfile: Dockerfile
+      network: host
       args:
         - RELEASE=2.5
         - CONF_PATH=configuration-dev.ini
