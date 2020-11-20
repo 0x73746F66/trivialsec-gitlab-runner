@@ -16,3 +16,4 @@ build:
   only:
     refs:
       - merge_request
+      - master
