@@ -32,7 +32,7 @@ RUN mkdir -p /usr/share/man/man1mkdir /usr/share/man/man1 && \
     yum clean metadata && \
     yum -q -y clean all && \
     python3.8 -m pip install -q --no-cache-dir -U pip && \
-    python3.8 -m pip install -q --no-cache-dir -U --use-feature=2020-resolver setuptools wheel
+    python3.8 -m pip install -q --no-cache-dir -U setuptools wheel awscli
 
 ENTRYPOINT ["/usr/bin/env"]
 CMD ["tail", "-f", "/dev/null"]

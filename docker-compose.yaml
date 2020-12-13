@@ -43,6 +43,7 @@ services:
     <<: *defaults
     image: mysql:8
     container_name: mysql
+    command: 'mysqld --bind-address=0.0.0.0'
     volumes:
       - ./mysql_datadir:/var/lib/mysql
       - ./sql:/tmp/sql
@@ -70,6 +71,8 @@ services:
     <<: *defaults
     image: redis:5.0@sha256:e73ef998c22f9a98793d9951bb2915cd945d8fa6f9ec1b324e85d19617efc2fd
     container_name: redis
+    ports:
+      - 6379:6379
     expose:
       - 6379
     volumes:

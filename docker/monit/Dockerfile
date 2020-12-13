@@ -42,7 +42,7 @@ COPY monitrc monitrc
 
 RUN chmod 0600 monitrc && \
     chown -R trivialsec: monitrc /opt/monit && \
-    pip install --use-feature=2020-resolver -q --no-cache-dir --isolated -U pip setuptools wheel
+    pip install -q --no-cache-dir --isolated -U pip setuptools wheel
 
 ENTRYPOINT ["/usr/bin/env"]
 CMD ["monit", "-I", "-B", "-c", "monitrc"]
