@@ -4,7 +4,7 @@ services:
 
 variables:
   DOCKER_DRIVER: overlay
-  COMMON_VERSION: 0.1.4
+  COMMON_VERSION: 0.1.5
   NODE_ENV: production
   NODE_PATH: /home/ec2-user/node_modules
 
