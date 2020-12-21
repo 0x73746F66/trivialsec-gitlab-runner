@@ -1,3 +1,17 @@
+image: docker:latest
+services:
+  - docker:dind
+
+variables:
+  DOCKER_DRIVER: overlay
+  COMMON_VERSION: 0.1.4
+  NODE_ENV: production
+  NODE_PATH: /home/ec2-user/node_modules
+
+before_script:
+  - docker info
+  - apk add --no-cache docker-compose
+
 stages:
   - build
 
@@ -6,10 +20,6 @@ build:
   tags:
     - python
   stage: build
-  variables:
-    COMMON_VERSION: 0.1.4
-    NODE_ENV: production
-    NODE_PATH: /home/ec2-user/node_modules
   script:
     - make build
   only:
@@ -21,10 +31,6 @@ buildnc:
   tags:
     - python
   stage: build
-  variables:
-    COMMON_VERSION: 0.1.4
-    NODE_ENV: production
-    NODE_PATH: /home/ec2-user/node_modules
   script:
     - make buildnc
   only:
