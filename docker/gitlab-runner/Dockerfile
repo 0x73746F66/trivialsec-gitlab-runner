@@ -6,6 +6,7 @@ RUN apt-get update && \
         python3.8 \
         python3.8-distutils \
         python3.8-dev \
+        unzip \
         zip \
         jq && \
     curl -s https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \

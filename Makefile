@@ -9,19 +9,14 @@ help: ## This help.
 
 .DEFAULT_GOAL := help
 
-update:
-	git pull
-	docker-compose pull redis mongo mysql
-
-build-runner:
-	docker-compose build --no-cache --compress gitlab-runner
-
 build:
 	docker-compose build --compress
-	# docker tag $(AWS_ACCOUNT).dkr.ecr.$(AWS_REGION).amazonaws.com/trivialsec/node-base trivialsec/node-base
 
 buildnc:
 	docker-compose build --no-cache --compress
+
+update:
+	docker-compose pull redis mysql
 
 rebuild: down build
 
@@ -50,9 +45,8 @@ db-rebuild:
 	docker-compose exec mysql bash -c "mysql -uroot -p'$(MYSQL_ROOT_PASSWORD)' -q -s < /tmp/sql/schema.sql"
 	docker-compose exec mysql bash -c "mysql -uroot -p'$(MYSQL_ROOT_PASSWORD)' -q -s < /tmp/sql/init-data.sql"
 
-up:
+up: update
 	docker-compose up -d redis mysql
 
 down:
-	docker-compose stop redis mysql
-	yes|docker-compose rm redis mysql
+	docker-compose down

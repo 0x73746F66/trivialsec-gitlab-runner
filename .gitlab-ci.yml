@@ -1,8 +1,3 @@
-before_script:
-  - echo 'COMMON_VERSION=0.1.4' > .env
-  - echo 'NODE_ENV=production' > .env
-  - echo 'NODE_PATH=/home/ec2-user/node_modules' > .env
-
 stages:
   - build
 
@@ -11,9 +6,27 @@ build:
   tags:
     - python
   stage: build
+  variables:
+    COMMON_VERSION: 0.1.4
+    NODE_ENV: production
+    NODE_PATH: /home/ec2-user/node_modules
+  script:
+    - make build
+  only:
+    refs:
+      - merge_request
+
+buildnc:
+  retry: 2
+  tags:
+    - python
+  stage: build
+  variables:
+    COMMON_VERSION: 0.1.4
+    NODE_ENV: production
+    NODE_PATH: /home/ec2-user/node_modules
   script:
     - make buildnc
   only:
     refs:
-      - merge_request
       - master
