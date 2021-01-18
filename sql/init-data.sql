@@ -7,10 +7,10 @@ INSERT INTO roles ( `name` ) VALUES ( 'Audit' );
 INSERT INTO roles ( `name`, `internal_only` ) VALUES ( 'Support', 1 );
 
 INSERT INTO accounts ( `alias`, `plan_id`, `billing_email`, `socket_key`, `verification_hash` ) VALUES ( 'root', 5, 'accounts@trivialsec.com', '886313e1-3b8a-5372-9b90-0c9aee199e5d', 'oajrzBUbE42xvAi07CTLljRSiQTNdzR9OHhzB5zLXiA');
-INSERT INTO members ( `email`, `account_id`, `password`, `verified`, `confirmation_url` ) VALUES ( 'support@trivialsec.com', 1, '$pbkdf2-sha256$8000$qfWeE.JcS8lZCw$z0djf969aB1RgyG.fBuaal7HJMWm3F2y2WG2mcPnbSg', 1, 'support');
+INSERT INTO members ( `email`, `account_id`, `password`, `verified`, `confirmation_url` ) VALUES ( 'support@trivialsec.com', 1, '$pbkdf2-sha256$8000$cI5xLiUEYEzpHQ$w0IEKwh27m9L5wqVyiYacR5c0It.fENil9bbzr0Ffz0', 1, 'support');
 INSERT INTO members_roles ( `member_id`, `role_id` ) VALUES ( 1, 1 );
 INSERT INTO members_roles ( `member_id`, `role_id` ) VALUES ( 1, 5 );
-
+INSERT INTO api_keys (`api_key`, `api_key_secret`, `comment`, `member_id`, `allowed_origin`, `active`) VALUES ('0CBD6369526457CEBEA116273EBF1FCB', 'aca3d029ee5650eb8f8467aa22136e5d', 'public-api', 1, 'localhost:5000', 1);
 INSERT INTO plans (
     `account_id`, `name`, `is_dedicated`, `cost`, `currency`, `retention_days`,
     `stripe_customer_id`,
@@ -20,7 +20,7 @@ INSERT INTO plans (
     `threatintel`, `compromise_indicators`, `typosquatting`
     ) VALUES (
     1, 'Internal', 0, 0, 'AUD', 1825,
-    'cus_I3nG4VRRp18ktx',
+    'cus_IjA67Itbk3PAjp',
     999999, 999999, 999999, 999999,
     999999, 999999, 999999,
     1, 1,
@@ -5769,22 +5769,22 @@ VALUES (
     );
 
 INSERT INTO finding_details (
-    finding_detail_id,
-    title,
-    description,
-    type_namespace,
-    type_category,
-    type_classifier,
-    criticality,
-    confidence,
-    severity_product,
-    recommendation,
-    recommendation_url,
-    cvss_vector,
-    created_at,
-    review,
-    updated_at,
-    modified_by_id
+    `finding_detail_id`,
+    `title`,
+    `description`,
+    `type_namespace`,
+    `type_category`,
+    `type_classifier`,
+    `criticality`,
+    `confidence`,
+    `severity_product`,
+    `recommendation`,
+    `recommendation_url`,
+    `cvss_vector`,
+    `created_at`,
+    `review`,
+    `updated_at`,
+    `modified_by_id`
 ) VALUES (
     "96nX6l2Ee9sSmVg0e8KPa1u9fJL8tFirL6LVdyPplDg", 
     "Session Ticket rfc5077", 
@@ -5907,7 +5907,7 @@ INSERT INTO finding_details (
 ),(
     "D8pl9iybC6eUDVm8zwG40nkS6QK6zz3pSqofC71vo", 
     "OCSP stapling not offered", 
-    null, 
+    "Unvalidated", 
     "Software and Configuration Checks", 
     "Vulnerabilities", 
     "SSL/TLS", 
@@ -5924,7 +5924,7 @@ INSERT INTO finding_details (
 ),(
     "v3McSkyQN1LDtmEIAWIVeVpynzcaczih88O0hXAA5k", 
     "NULL ciphers offered for authentication-only communication", 
-    null, 
+    "Unvalidated", 
     "Software and Configuration Checks", 
     "Vulnerabilities", 
     "SSL/TLS", 
@@ -5941,7 +5941,7 @@ INSERT INTO finding_details (
 ),(
     "pVZzNzIbafhC9zaqz0aYVSaDdLDf.hGySLo3QsmkEoY", 
     "Unencrypted unauthenticated communication possible", 
-    null, 
+    "Unvalidated", 
     "Software and Configuration Checks", 
     "Vulnerabilities", 
     "SSL/TLS", 
@@ -6009,7 +6009,7 @@ INSERT INTO finding_details (
 ),(
     ".yzp.qOtI0ZuvNQKlOVF6mwOxTNJhH8P.dHS9BXxi74", 
     "DNS Hijacking - Akamai Edge DNS", 
-    null, 
+    "Unvalidated", 
     "Software and Configuration Checks", 
     "Vulnerabilities", 
     "DNS", 
@@ -6026,7 +6026,7 @@ INSERT INTO finding_details (
 ),(
     "PrpUP2VQJ5XEM9sQ7j8H4fvFvIv3gWYfpsqy28K3rSQ", 
     "Strict Transport Security not offered", 
-    null, 
+    "Unvalidated", 
     "Software and Configuration Checks", 
     "Industry and Regulatory Standards", 
     "OWASP", 
@@ -6332,7 +6332,7 @@ INSERT INTO finding_details (
 ),(
     "KsdofcgeS3g3CDuXKkE7fCelzwAhP0lpi07ZxfAU3Ak", 
     "security_headers", 
-    "--", 
+    "Unvalidated", 
     "Sensitive Data Identifications", 
     "Security", 
     "security_headers", 
@@ -6400,7 +6400,7 @@ INSERT INTO finding_details (
 ),(
     "31EtBRv4d8x4Dw0yvsgc1wQdSxtJBzk.EX2LUyTzyDE", 
     "X-Frame-Options potential clickjacking risk", 
-    null, 
+    "Unvalidated", 
     "Software and Configuration Checks", 
     "Industry and Regulatory Standards", 
     "OWASP", 
@@ -6434,7 +6434,7 @@ INSERT INTO finding_details (
 ),(
     "GcncZIadqxsSysjF.tBOkoYHbBQkk9HEmIRE2MdezQ", 
     "X-XSS-Protection site allows XSS", 
-    null, 
+    "Unvalidated", 
     "Software and Configuration Checks", 
     "Industry and Regulatory Standards", 
     "OWASP", 
@@ -6553,7 +6553,7 @@ INSERT INTO finding_details (
 ),(
     "8XSphYeUpGRSUVDmyixqcMQVpSasaofE1wCEzE25vI", 
     "DNS Hijacking - Amazon Route 53", 
-    null, 
+    "Unvalidated", 
     "Software and Configuration Checks", 
     "Vulnerabilities", 
     "DNS", 
@@ -6604,7 +6604,7 @@ INSERT INTO finding_details (
 ),(
     "HaQMrCJlouoNWRwPv0Y6406GRSfOAL6FSUofQ81ozA", 
     "Content-Security-Policy Risk of XSS", 
-    null, 
+    "Unvalidated", 
     "Software and Configuration Checks", 
     "Industry and Regulatory Standards", 
     "OWASP", 
@@ -6893,7 +6893,7 @@ INSERT INTO finding_details (
 ),(
     "uw6Xzhetol6UuwIStoWzOL9wjnc94sNxJI01rVyhg", 
     "DNS Hijacking - UltraDNS", 
-    null, 
+    "Unvalidated", 
     "Software and Configuration Checks", 
     "Vulnerabilities", 
     "DNS", 
@@ -7029,7 +7029,7 @@ INSERT INTO finding_details (
 ),(
     "AYXWOj0ynCpDq41EhISf36s3bivGVk4npQTWS0fkhlM", 
     "X-Content-Type-Options malicious code delivery", 
-    null, 
+    "Unvalidated", 
     "Software and Configuration Checks", 
     "Industry and Regulatory Standards", 
     "OWASP", 

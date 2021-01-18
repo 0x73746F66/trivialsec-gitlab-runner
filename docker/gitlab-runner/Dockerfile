@@ -1,4 +1,4 @@
-FROM gitlab/gitlab-runner
+FROM docker.io/library/gitlab/gitlab-runner
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \

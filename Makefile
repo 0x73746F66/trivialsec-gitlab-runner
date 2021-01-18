@@ -10,10 +10,10 @@ help: ## This help.
 .DEFAULT_GOAL := help
 
 build:
-	docker-compose build --compress
+	docker-compose build
 
 buildnc:
-	docker-compose build --no-cache --compress
+	docker-compose build --no-cache
 
 update:
 	docker-compose pull redis mysql

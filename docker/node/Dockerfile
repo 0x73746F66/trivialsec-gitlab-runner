@@ -1,4 +1,4 @@
-FROM amazonlinux:2-with-sources
+FROM docker.io/library/amazonlinux:2-with-sources
 ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 ARG NODE_PATH

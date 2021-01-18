@@ -1,4 +1,4 @@
-FROM amazonlinux:2-with-sources
+FROM docker.io/library/amazonlinux:2-with-sources
 
 WORKDIR /srv/app
 RUN mkdir -p /usr/share/man/man1mkdir /usr/share/man/man1 && \

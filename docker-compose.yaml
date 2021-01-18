@@ -41,7 +41,7 @@ services:
 
   mysql:
     <<: *defaults
-    image: mysql:8
+    image: docker.io/library/mysql:8
     container_name: mysql
     command: 'mysqld --bind-address=0.0.0.0'
     volumes:
@@ -54,8 +54,6 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     security_opt:
       - seccomp:"./docker/seccomp-mysql.json"
     networks:
@@ -69,7 +67,7 @@ services:
 
   redis:
     <<: *defaults
-    image: redis:5.0@sha256:e73ef998c22f9a98793d9951bb2915cd945d8fa6f9ec1b324e85d19617efc2fd
+    image: docker.io/library/redis:5.0
     container_name: redis
     ports:
       - 6379:6379
@@ -84,7 +82,7 @@ services:
 
   mongo:
     <<: *defaults
-    image: mongo:4.0@sha256:f0397f249d2ced55ce59c7c50a8490ea536ffe4af4db75801f3443a380b7070a
+    image: docker.io/library/mongo:4.0
     container_name: mongo
     ports:
       - 27017:27017

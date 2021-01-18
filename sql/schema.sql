@@ -105,9 +105,20 @@ CREATE TABLE IF NOT EXISTS members (
     constraint pk_members primary key (member_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS api_keys (
+    `api_key` VARCHAR(255) not null,
+    `api_key_secret` VARCHAR(255) not null,
+    `comment` VARCHAR(255) not null,
+    `member_id` bigint unsigned not null,
+    `allowed_origin` VARCHAR(255) not null,
+    `active` tinyint not null default '0',
+    `created_at` TIMESTAMP not null default CURRENT_TIMESTAMP,
+    constraint pk_api_keys primary key (api_key)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS members_roles (
     `member_id` bigint unsigned not null,
-    `role_id` int unsigned not null,
+    `role_id` bigint unsigned not null,
     constraint pk_members_roles primary key (role_id, member_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
