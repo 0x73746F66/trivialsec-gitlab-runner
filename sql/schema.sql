@@ -191,7 +191,6 @@ CREATE TABLE IF NOT EXISTS projects (
     `project_id` bigint unsigned not null auto_increment,
     `account_id` bigint unsigned not null,
     `name` VARCHAR(255) not null,
-    `tracking_id` VARCHAR(255) default null,
     `created_at` TIMESTAMP not null default CURRENT_TIMESTAMP,
     `deleted` tinyint not null default '0',
     constraint pk_projects primary key (project_id)
@@ -291,7 +290,6 @@ CREATE TABLE IF NOT EXISTS job_runs (
     `job_run_id` bigint unsigned not null auto_increment,
     `account_id` bigint unsigned not null,
     `project_id` bigint unsigned not null,
-    `tracking_id` VARCHAR(255) not null,
     `service_type_id` bigint unsigned not null,
     `node_id` VARCHAR(255) default null,
     `worker_id` VARCHAR(255) default null,

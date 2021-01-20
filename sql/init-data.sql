@@ -6,7 +6,7 @@ INSERT INTO roles ( `name` ) VALUES ( 'Read Only' );
 INSERT INTO roles ( `name` ) VALUES ( 'Audit' );
 INSERT INTO roles ( `name`, `internal_only` ) VALUES ( 'Support', 1 );
 
-INSERT INTO accounts ( `alias`, `plan_id`, `billing_email`, `socket_key`, `verification_hash` ) VALUES ( 'root', 5, 'accounts@trivialsec.com', '886313e1-3b8a-5372-9b90-0c9aee199e5d', 'oajrzBUbE42xvAi07CTLljRSiQTNdzR9OHhzB5zLXiA');
+INSERT INTO accounts ( `alias`, `plan_id`, `billing_email`, `socket_key`, `verification_hash` ) VALUES ( 'root', 1, 'accounts@trivialsec.com', '886313e1-3b8a-5372-9b90-0c9aee199e5d', 'oajrzBUbE42xvAi07CTLljRSiQTNdzR9OHhzB5zLXiA');
 INSERT INTO members ( `email`, `account_id`, `password`, `verified`, `confirmation_url` ) VALUES ( 'support@trivialsec.com', 1, '$pbkdf2-sha256$8000$cI5xLiUEYEzpHQ$w0IEKwh27m9L5wqVyiYacR5c0It.fENil9bbzr0Ffz0', 1, 'support');
 INSERT INTO members_roles ( `member_id`, `role_id` ) VALUES ( 1, 1 );
 INSERT INTO members_roles ( `member_id`, `role_id` ) VALUES ( 1, 5 );
