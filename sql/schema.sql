@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS accounts (
     `alias` VARCHAR(255) NULL,
     `socket_key` VARCHAR(48) NOT NULL,
     `is_setup` TINYINT NOT NULL DEFAULT '0',
-    `verification_hash` VARCHAR(45) NOT NULL,
+    `verification_hash` VARCHAR(56) NOT NULL,
     `plan_id` BIGINT UNSIGNED NOT NULL,
     `billing_email` VARCHAR(255) NOT NULL,
     `registered` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -119,6 +119,18 @@ CREATE TABLE IF NOT EXISTS api_keys (
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_api_keys PRIMARY KEY (api_key),
     INDEX index_api_keys_comment (`comment`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
+
+CREATE TABLE IF NOT EXISTS webhooks (
+    `webhook_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `account_id` BIGINT UNSIGNED NOT NULL,
+    `webhook_secret` VARCHAR(255) NOT NULL,
+    `target` VARCHAR(255) NOT NULL,
+    `comment` VARCHAR(255) DEFAULT NULL,
+    `active` TINYINT NOT NULL DEFAULT '1',
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_webhooks PRIMARY KEY (webhook_id),
+    INDEX index_webhooks_account_id (`account_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
 
 CREATE TABLE IF NOT EXISTS members_roles (

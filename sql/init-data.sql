@@ -11,6 +11,7 @@ INSERT INTO members ( `email`, `account_id`, `password`, `verified`, `confirmati
 INSERT INTO members_roles ( `member_id`, `role_id` ) VALUES ( 1, 1 );
 INSERT INTO members_roles ( `member_id`, `role_id` ) VALUES ( 1, 5 );
 INSERT INTO api_keys (`api_key`, `api_key_secret`, `comment`, `member_id`, `allowed_origin`, `active`) VALUES ('0CBD6369526457CEBEA116273EBF1FCB', 'aca3d029ee5650eb8f8467aa22136e5d', 'public-api', 1, 'localhost:5000', 1);
+INSERT INTO webhooks (`account_id`, `webhook_secret`, `comment`, `target`, `active`) VALUES (1, '38B7329E11F45058A6D4389AC792631A', 'webhook', 'localhost:5000/webhooks/trivialsec', 1);
 INSERT INTO plans (
     `account_id`, `name`, `is_dedicated`, `cost`, `currency`, `retention_days`,
     `stripe_customer_id`,
