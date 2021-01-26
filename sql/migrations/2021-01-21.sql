@@ -1,5 +1,4 @@
 ALTER TABLE job_runs CHANGE COLUMN queue_data queue_data JSON NOT NULL;
-ALTER TABLE job_runs ADD COLUMN `target` VARCHAR(255) GENERATED ALWAYS AS (queue_data->>$.target) STORED AFTER queue_data;
 
 CREATE INDEX index_plans_account_id ON plans (account_id);
 CREATE INDEX index_plans_stripe_customer_id ON plans (stripe_customer_id);

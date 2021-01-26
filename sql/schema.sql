@@ -341,7 +341,6 @@ CREATE TABLE IF NOT EXISTS job_runs (
     `node_id` VARCHAR(255) DEFAULT NULL,
     `worker_id` VARCHAR(255) DEFAULT NULL,
     `queue_data` JSON NOT NULL,
-    `target` VARCHAR(255) GENERATED ALWAYS AS (queue_data->"$.target") STORED,
     `state` VARCHAR(255) NOT NULL,
     `worker_message` TEXT DEFAULT NULL,
     `priority` INT(4) NOT NULL DEFAULT 0,
