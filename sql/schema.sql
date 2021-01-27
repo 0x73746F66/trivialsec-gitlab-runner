@@ -72,26 +72,23 @@ CREATE TABLE IF NOT EXISTS plans (
     `currency` VARCHAR(255) DEFAULT NULL,
     `interval` VARCHAR(255) DEFAULT NULL,
     `retention_days` int UNSIGNED NOT NULL DEFAULT '32',
-    `active_daily` int NOT NULL DEFAULT '1',
-    `scheduled_active_daily` int NOT NULL DEFAULT '0',
-    `passive_daily` int NOT NULL DEFAULT '10',
-    `scheduled_passive_daily` int NOT NULL DEFAULT '0',
-    `git_integration_daily` int NOT NULL DEFAULT '0',
-    `source_code_daily` int NOT NULL DEFAULT '0',
-    `dependency_support_rating` int NOT NULL DEFAULT '0',
-    `alert_email` TINYINT NOT NULL DEFAULT '0',
-    `alert_integrations` TINYINT NOT NULL DEFAULT '0',
+    `on_demand_passive_daily` int NOT NULL DEFAULT '10',
+    `on_demand_active_daily` int NOT NULL DEFAULT '1',
+    `domains_monitored` int NOT NULL DEFAULT '1',
+    `webhooks` TINYINT NOT NULL DEFAULT '0',
     `threatintel` TINYINT NOT NULL DEFAULT '0',
-    `compromise_indicators` TINYINT NOT NULL DEFAULT '0',
     `typosquatting` TINYINT NOT NULL DEFAULT '0',
+    `compromise_indicators` TINYINT NOT NULL DEFAULT '0',
+    `source_code_scans` TINYINT NOT NULL DEFAULT '0',
+    `compliance_reports` TINYINT NOT NULL DEFAULT '0',
     CONSTRAINT pk_plans PRIMARY KEY (plan_id),
     INDEX index_plans_account_id (account_id),
     INDEX index_plans_stripe_customer_id (stripe_customer_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
 
 CREATE TABLE IF NOT EXISTS plan_invoices (
+    `stripe_invoice_id` VARCHAR(255) NOT NULL,
     `plan_id` BIGINT UNSIGNED NOT NULL,
-    `stripe_invoice_id` VARCHAR(255) DEFAULT NULL,
     `hosted_invoice_url` TEXT NOT NULL,
     `cost` DECIMAL(10,2) UNSIGNED DEFAULT NULL,
     `currency` VARCHAR(255) DEFAULT NULL,
@@ -99,7 +96,7 @@ CREATE TABLE IF NOT EXISTS plan_invoices (
     `status` VARCHAR(255) DEFAULT NULL,
     `due_date` DATETIME DEFAULT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT pk_plan_invoices PRIMARY KEY (plan_id)
+    CONSTRAINT pk_plan_invoices PRIMARY KEY (stripe_invoice_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS roles (
