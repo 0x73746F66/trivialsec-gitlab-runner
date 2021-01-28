@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS accounts (
     `socket_key` VARCHAR(48) NOT NULL,
     `is_setup` TINYINT NOT NULL DEFAULT '0',
     `verification_hash` VARCHAR(56) NOT NULL,
-    `plan_id` BIGINT UNSIGNED NOT NULL,
     `billing_email` VARCHAR(255) NOT NULL,
     `registered` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_accounts PRIMARY KEY (account_id)

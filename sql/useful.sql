@@ -33,7 +33,7 @@ select
     c.nameservers,
     c.permit_domains
 from accounts a
-left join plans p on a.plan_id = p.plan_id
+left join plans p on a.account_id = p.account_id
 left join account_config c on a.account_id = c.account_id
 left join roles r on c.default_role_id = r.role_id
 
@@ -59,7 +59,7 @@ from members_roles l
 left join members m on l.member_id = m.member_id
 left join roles r on l.role_id = r.role_id
 left join accounts a on m.account_id = a.account_id
-left join plans p on a.plan_id = p.plan_id
+left join plans p on a.account_id = p.account_id
 
 -- Invitations
 
@@ -86,4 +86,4 @@ from invitations i
 left join members m on i.member_id = m.member_id
 left join roles r on i.role_id = r.role_id
 left join accounts a on i.account_id = a.account_id
-left join plans p on a.plan_id = p.plan_id
+left join plans p on a.account_id = p.account_id
