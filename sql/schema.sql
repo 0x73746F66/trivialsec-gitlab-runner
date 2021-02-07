@@ -333,17 +333,17 @@ CREATE TABLE IF NOT EXISTS job_runs (
     `job_run_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `account_id` BIGINT UNSIGNED NOT NULL,
     `project_id` BIGINT UNSIGNED NOT NULL,
+    `state` VARCHAR(255) NOT NULL,
+    `worker_message` TEXT DEFAULT NULL,
     `service_type_id` BIGINT UNSIGNED NOT NULL,
     `node_id` VARCHAR(255) DEFAULT NULL,
     `worker_id` VARCHAR(255) DEFAULT NULL,
-    `queue_data` JSON NOT NULL,
-    `state` VARCHAR(255) NOT NULL,
-    `worker_message` TEXT DEFAULT NULL,
     `priority` INT(4) NOT NULL DEFAULT 0,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `started_at` DATETIME DEFAULT NULL,
     `updated_at` DATETIME DEFAULT NULL,
     `completed_at` DATETIME DEFAULT NULL,
+    `queue_data` JSON NOT NULL,
     CONSTRAINT pk_job_runs PRIMARY KEY (job_run_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
