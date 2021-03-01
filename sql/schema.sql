@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS plans (
 CREATE TABLE IF NOT EXISTS plan_invoices (
     `stripe_invoice_id` VARCHAR(255) NOT NULL,
     `plan_id` BIGINT UNSIGNED NOT NULL,
-    `hosted_invoice_url` TEXT NOT NULL,
+    `hosted_invoice_url` TEXT DEFAULT NULL,
     `cost` DECIMAL(10,2) UNSIGNED DEFAULT NULL,
     `currency` VARCHAR(255) DEFAULT NULL,
     `coupon_code` VARCHAR(16) DEFAULT NULL,
@@ -272,7 +272,9 @@ CREATE TABLE IF NOT EXISTS findings (
     `service_type_id` BIGINT UNSIGNED NOT NULL,
     `source_description` TEXT NOT NULL,
     `is_passive` TINYINT NOT NULL,
+    `cvss_vector` VARCHAR(255) DEFAULT NULL,
     `severity_normalized` INT(4) NOT NULL DEFAULT '0',
+    `confidence` INT(4) NOT NULL DEFAULT '0',
     `verification_state` VARCHAR(255) NOT NULL,
     `workflow_state` VARCHAR(255) NOT NULL,
     `state` VARCHAR(255) NOT NULL,
@@ -294,8 +296,6 @@ CREATE TABLE IF NOT EXISTS finding_details (
     `type_namespace` VARCHAR(255) NULL DEFAULT NULL,
     `type_category` VARCHAR(255) NULL DEFAULT NULL,
     `type_classifier` VARCHAR(255) NULL DEFAULT NULL,
-    `criticality` INT(4) NOT NULL DEFAULT '0',
-    `confidence` INT(4) NOT NULL DEFAULT '0',
     `severity_product` INT(4) NOT NULL DEFAULT '0',
     `recommendation` TEXT DEFAULT NULL,
     `recommendation_url` VARCHAR(255) DEFAULT NULL,
@@ -365,18 +365,26 @@ CREATE TABLE IF NOT EXISTS dns_records (
 
 CREATE TABLE IF NOT EXISTS programs (
     `program_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `project_id` BIGINT UNSIGNED NOT NULL,
-    `domain_id` BIGINT UNSIGNED DEFAULT NULL,
     `name` VARCHAR(255) NOT NULL,
-    `version` VARCHAR(255) DEFAULT NULL,
-    `source_description` TEXT NOT NULL,
     `external_url` VARCHAR(255) DEFAULT NULL,
     `icon_url` VARCHAR(255) DEFAULT NULL,
     `category` VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_programs PRIMARY KEY (program_id),
+    INDEX index_programs_name (`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS inventory_items (
+    `inventory_item_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `program_id` BIGINT UNSIGNED NOT NULL,
+    `project_id` BIGINT UNSIGNED NOT NULL,
+    `domain_id` BIGINT UNSIGNED DEFAULT NULL,
+    `version` VARCHAR(255) DEFAULT NULL,
+    `source_description` TEXT NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `last_checked` DATETIME DEFAULT NULL,
-    CONSTRAINT pk_programs PRIMARY KEY (program_id),
-    INDEX index_programs_project_id (project_id)
+    CONSTRAINT pk_inventory PRIMARY KEY (inventory_item_id),
+    INDEX index_inventory_project_id (project_id),
+    INDEX index_inventory_domain_id (domain_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS security_alerts (

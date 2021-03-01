@@ -23,6 +23,7 @@ RUN apt-get update && \
     rm -rf /tmp/* /var/lib/apt/lists/* && \
     terraform -install-autocomplete && \
     python3.8 -m pip install -q --no-cache-dir -U pip setuptools wheel && \
-    CFLAGS="-O0" STATICBUILD=true python3.8 -m pip install -q --no-cache-dir -U awscli pylint
+    CFLAGS="-O0" STATICBUILD=true python3.8 -m pip install -q --no-cache-dir -U awscli pylint semgrep && \
+    semgrep --config=p/ci --lang=py /dev/null || true
 
 VOLUME [ "/etc/gitlab-runner" ]
