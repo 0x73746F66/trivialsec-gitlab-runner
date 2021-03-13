@@ -1,6 +1,7 @@
 version: '3.6'
 x-defaults: &defaults
   env_file: .env
+  network_mode: host
   restart: unless-stopped
   logging:
     options:
@@ -14,7 +15,6 @@ services:
     build:
       context: ./docker/python
       dockerfile: Dockerfile
-      network: host
 
   node-base:
     env_file: .env
@@ -45,7 +45,7 @@ services:
     container_name: mysql
     command: 'mysqld --bind-address=0.0.0.0'
     volumes:
-      - ./mysql_datadir:/var/lib/mysql
+      - mysql-datadir:/var/lib/mysql
       - ./sql:/tmp/sql
     ports:
       - 3306:3306
@@ -56,10 +56,6 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
     security_opt:
       - seccomp:"./docker/seccomp-mysql.json"
-    networks:
-      trivialsec:
-        aliases:
-          - mysql
     healthcheck:
       test: mysqladmin ping -h mysql
       timeout: 20s
@@ -74,54 +70,15 @@ services:
     expose:
       - 6379
     volumes:
-      - ./redis_datadir:/data
-    networks:
-      trivialsec:
-        aliases:
-          - redis
-
-  mongo:
-    <<: *defaults
-    image: docker.io/library/mongo:4.0
-    container_name: mongo
-    ports:
-      - 27017:27017
-    expose:
-      - 27017
-    volumes:
-      - ./mongo_datadir:/data/db
-    networks:
-      trivialsec:
-        aliases:
-          - mongo
-
-  search:
-    <<: *defaults
-    image: trivialsec/search
-    container_name: search
-    build:
-      context: ./cve-search
-      dockerfile: Dockerfile
-      network: host
-      args:
-        - RELEASE=2.5
-        - CONF_PATH=configuration-dev.ini
-    ports:
-      - 5180:5180
-    expose:
-      - 5180
-    depends_on:
-      - mongo
-      - redis
-    networks:
-      trivialsec:
-        aliases:
-          - search
-
-networks:
-  trivialsec:
+      - redis-datadir:/data
 
 volumes:
   gitlab-runner-config:
     external: true
     name: gitlab-runner-config
+  redis-datadir:
+    external: true
+    name: redis-datadir
+  mysql-datadir:
+    external: true
+    name: mysql-datadir
