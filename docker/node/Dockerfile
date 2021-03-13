@@ -6,24 +6,21 @@ ENV NODE_PATH $NODE_PATH
 ENV PATH="$PATH:$NODE_PATH/.bin"
 
 WORKDIR /srv/app
-RUN mkdir -p /usr/share/man/man1mkdir /usr/share/man/man1 && \
-    yum update -q -y && \
+RUN mkdir -p /usr/share/man/man1mkdir /usr/share/man/man1
+RUN yum update -q -y && \
     yum install -q -y deltarpm && \
     yum groupinstall -q -y  "Development Tools" && \
     update-ca-trust force-enable && \
     curl -sL https://rpm.nodesource.com/setup_14.x | bash - && \
     curl -sL https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo && \
-    amazon-linux-extras enable epel && \
     yum install -q -y  \
         hostname \
         zip \
         jq \
-        epel-release \
         wget \
         nodejs \
         yarn \
         jq \
-        # dev only
         shadow-utils \
         procps \
         nano && \
