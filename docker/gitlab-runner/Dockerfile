@@ -3,7 +3,6 @@ FROM docker.io/gitlab/gitlab-runner
 ENV DEBIAN_FRONTEND=noninteractive
 ENV CFLAGS="-O0"
 ENV STATICBUILD=true
-ENV PATH="${PATH}:/home/gitlab-runner/.local/bin"
 
 COPY config.toml /etc/gitlab-runner/config.toml
 RUN apt-get update \
@@ -39,7 +38,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /tmp/* /var/lib/apt/lists/* \
     && terraform -install-autocomplete \
-    && python3 -m pip install -q --no-cache-dir -U pip pipx setuptools wheel awscli pylint semgrep docker-compose
+    && python3 -m pip install -q --no-cache-dir -U pip setuptools wheel awscli pylint semgrep
 
 USER root
 VOLUME [ "/etc/gitlab-runner" ]

@@ -8,7 +8,6 @@ variables:
   DOCKER_USER: ci
 
 before_script:
-  - id
   - make --version
   - docker --version
   - docker-compose --version
@@ -36,7 +35,6 @@ push:
   stage: build
   script:
     - make docker-login
-    - make buildci
     - make push
   only:
     refs:
