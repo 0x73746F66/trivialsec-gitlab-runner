@@ -1,5 +1,5 @@
 FROM docker.io/gitlab/gitlab-runner
-
+ENV RUNNER_TOKEN=${RUNNER_TOKEN}
 ENV DEBIAN_FRONTEND=noninteractive
 ENV CFLAGS="-O0"
 ENV STATICBUILD=true
