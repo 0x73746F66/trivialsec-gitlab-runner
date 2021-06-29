@@ -1,29 +1,44 @@
 FROM docker.io/gitlab/gitlab-runner
+
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+ENV CFLAGS="-O0"
+ENV STATICBUILD=true
+
+COPY config.toml /etc/gitlab-runner/config.toml
+COPY entrypoint /entrypoint
+RUN chmod a+x /entrypoint \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        acl \
         build-essential \
         python3.8 \
         python3.8-distutils \
         python3.8-dev \
+        python3-venv \
         unzip \
-        zip \
+        gzip \
+        tar \
         jq \
         software-properties-common \
-        gnupg2 && \
-    curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
-    apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main" && \
-    apt-get update && \
-    apt-get install -y \
-        terraform && \
-    curl -s https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
-    python3.8 get-pip.py && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    rm -rf /tmp/* /var/lib/apt/lists/* && \
-    terraform -install-autocomplete && \
-    python3.8 -m pip install -q --no-cache-dir -U pip setuptools wheel && \
-    CFLAGS="-O0" STATICBUILD=true python3.8 -m pip install -q --no-cache-dir -U awscli pylint semgrep && \
-    semgrep -q --config=p/ci --lang=py /dev/null || true
+        ca-certificates \
+        apt-transport-https \
+        lsb-release \
+        gnupg \
+        gnupg2 \
+    && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
+    && curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - \
+    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
+    && apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main" \
+    && apt-get update \
+    && apt-get install -y \
+        terraform \
+        docker-ce-cli \
+    && curl -s https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py \
+    && python3 /tmp/get-pip.py \
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && rm -rf /tmp/* /var/lib/apt/lists/* \
+    && terraform -install-autocomplete \
+    && python3 -m pip install -q --no-cache-dir -U pip setuptools wheel awscli pylint semgrep
 
 VOLUME [ "/etc/gitlab-runner" ]
