@@ -16,5 +16,17 @@ function update_ca() {
 )
 # allow dind for gitlab-runner uid 999
 setfacl --modify user:999:rw /var/run/docker.sock
+# Registration Token
+[ -z "${RUNNER_TOKEN}" ] && ( echo "RUNNER_TOKEN missing"; exit 1 )
+sed -i "s/TOKEN/${RUNNER_TOKEN}/" /etc/gitlab-runner/config.toml
+gitlab-runner register --non-interactive \
+  --name "local-builder" \
+  --executor shell \
+  --run-untagged=false \
+  --tag-list "${RUNNER_TAGS:-builder}" \
+  --url 'https://gitlab.com' \
+  --registration-token ${RUNNER_TOKEN} \
+  --config /etc/gitlab-runner/config.toml
+ 
 # launch gitlab-runner passing all arguments
 exec gitlab-runner "$@"
