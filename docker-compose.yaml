@@ -51,8 +51,12 @@ services:
       context: ./docker/gitlab-runner
       dockerfile: Dockerfile
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/docker.sock:/var/run/docker.sock:rw
       - gitlab-cache:/cache:rw
+    environment:
+      RUNNER_TOKEN: ${RUNNER_TOKEN}
+      RUNNER_TAGS: ${RUNNER_TAGS}
+      RUNNER_NAME: ${RUNNER_NAME}
 
   mysql:
     <<: *defaults
