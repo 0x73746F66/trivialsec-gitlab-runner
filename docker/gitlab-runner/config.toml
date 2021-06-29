@@ -7,7 +7,7 @@ check_interval = 0
 [[runners]]
   name = "trivialsec-shared"
   url = "https://gitlab.com/"
-  token = "syfx8jUxk2XCvVoo2oJh"
+  token = "TOKEN"
   executor = "shell"
   cache_dir = "/cache"
   [runners.cache]
