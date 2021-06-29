@@ -8,6 +8,7 @@ variables:
   DOCKER_USER: ci
 
 before_script:
+  - touch .env
   - make --version
   - docker --version
   - make docker-login
@@ -16,7 +17,7 @@ stages:
   - build
   - push
 
-build:python:
+build:py:
   tags:
     - python
   stage: build

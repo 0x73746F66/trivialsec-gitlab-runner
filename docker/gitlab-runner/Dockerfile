@@ -30,8 +30,7 @@ RUN apt-get update \
     && apt-get install -y \
         terraform \
         docker-ce-cli \
-    && groupadd docker \
-    && usermod -aG docker gitlab-runner \
+    && setfacl --modify user:999:rw /var/run/docker.sock \
     && curl -s https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
     && python3 get-pip.py \
     && apt-get autoremove -y \
