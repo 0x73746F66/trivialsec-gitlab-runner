@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 -include .env
 export $(shell sed 's/=.*//' .env)
-.ONESHELL: # Applies to every targets in the file!
+.ONESHELL:
 .PHONY: help
 
 help: ## This help.
@@ -79,6 +79,7 @@ buildci-runner:
 		--cache-from $(NAME_CI):latest \
 		-t $(NAME_CI):${CI_BUILD_REF} \
 		-t $(NAME_CI):latest \
+		--build-arg RUNNER_TOKEN=${RUNNER_TOKEN} \
 		./docker/gitlab-runner
 
 pushci-runner:
@@ -130,3 +131,17 @@ up: update ## Starts latest container images for: redis, mysql
 
 down: ## Bring down containers
 	docker-compose down --remove-orphans
+
+build-local-runner:
+	docker build \
+		--cache-from $(NAME_CI):latest \
+		-t $(NAME_CI):local \
+		./docker/gitlab-runner
+
+run-local-runner: build-local-runner
+	@echo $(shell [ -z "${RUNNER_TOKEN}" ] && echo "RUNNER_TOKEN missing" )
+	docker run -d --rm \
+		--name gitlab-runner \
+		-v "/var/run/docker.sock:/var/run/docker.sock:rw" \
+		-e RUNNER_TOKEN=${RUNNER_TOKEN} \
+		$(NAME_CI):local
