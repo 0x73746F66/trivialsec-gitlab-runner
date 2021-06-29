@@ -1,0 +1,20 @@
+concurrent = 1
+check_interval = 0
+
+[session_server]
+  session_timeout = 1800
+
+[[runners]]
+  name = "trivialsec-shared"
+  url = "https://gitlab.com/"
+  token = "syfx8jUxk2XCvVoo2oJh"
+  executor = "docker"
+  cache_dir = "/cache"
+  [runners.docker]
+    tls_verify = false
+    image = "docker:stable"
+    privileged = false
+    disable_cache = false
+    volumes = ["/var/run/docker.sock:/var/run/docker.sock", "/cache"]
+  [runners.cache]
+    Insecure = false

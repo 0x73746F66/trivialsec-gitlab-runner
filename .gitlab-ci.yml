@@ -1,18 +1,21 @@
-image: docker:latest
-services:
-  - docker:dind
-
 variables:
-  DOCKER_DRIVER: overlay
   NODE_ENV: production
-  NODE_PATH: /home/ec2-user/node_modules
+  NODE_PATH: /home/trivialsec/node_modules
+  NGINX_VERSION: 1.21.0
+  GEO_DB_RELEASE: 2021-06
+  MODSEC_BRANCH: v3.0.4
+  OWASP_BRANCH: v3.3/master
+  DOCKER_USER: ci
 
 before_script:
-  - docker info
-  - apk add --no-cache docker-compose
+  - id
+  - make --version
+  - docker --version
+  - docker-compose --version
 
 stages:
   - build
+  - push
 
 build:
   retry: 2
@@ -20,18 +23,21 @@ build:
     - python
   stage: build
   script:
-    - make build
+    - make buildci
   only:
     refs:
       - merge_request
+      - main
 
-buildnc:
+push:
   retry: 2
   tags:
     - python
   stage: build
   script:
-    - make buildnc
+    - make docker-login
+    - make buildci
+    - make push
   only:
     refs:
-      - master
+      - main

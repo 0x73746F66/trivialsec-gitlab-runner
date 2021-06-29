@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS finding_notes;
 DROP TABLE IF EXISTS finding_watchers;
 DROP TABLE IF EXISTS findings;
 DROP TABLE IF EXISTS invitations;
+DROP TABLE IF EXISTS inventory_items;
 DROP TABLE IF EXISTS job_runs;
 DROP TABLE IF EXISTS key_values;
 DROP TABLE IF EXISTS known_ips;
