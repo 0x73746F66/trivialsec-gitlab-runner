@@ -20,7 +20,7 @@ setfacl --modify user:999:rw /var/run/docker.sock
 [ -z "${RUNNER_TOKEN}" ] && ( echo "RUNNER_TOKEN missing"; exit 1 )
 sed -i "s/TOKEN/${RUNNER_TOKEN}/" /etc/gitlab-runner/config.toml
 gitlab-runner register --non-interactive \
-  --name "local-builder" \
+  --name "${RUNNER_NAME:-local-builder}" \
   --executor shell \
   --run-untagged=false \
   --tag-list "${RUNNER_TAGS:-builder}" \
