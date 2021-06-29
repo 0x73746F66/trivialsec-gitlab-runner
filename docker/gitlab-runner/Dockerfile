@@ -5,8 +5,8 @@ ENV CFLAGS="-O0"
 ENV STATICBUILD=true
 
 COPY config.toml /etc/gitlab-runner/config.toml
-COPY entrypoint /custom-entrypoint
-RUN chmod a+x /custom-entrypoint \
+COPY entrypoint /entrypoint
+RUN chmod a+x /entrypoint \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
         acl \
@@ -42,4 +42,3 @@ RUN chmod a+x /custom-entrypoint \
     && python3 -m pip install -q --no-cache-dir -U pip setuptools wheel awscli pylint semgrep
 
 VOLUME [ "/etc/gitlab-runner" ]
-ENTRYPOINT /custom-entrypoint
