@@ -1,37 +1,102 @@
-image: docker:latest
-services:
-  - docker:dind
-
 variables:
-  DOCKER_DRIVER: overlay
   NODE_ENV: production
-  NODE_PATH: /home/ec2-user/node_modules
+  NODE_PATH: /home/trivialsec/node_modules
+  NGINX_VERSION: 1.21.0
+  GEO_DB_RELEASE: 2021-06
+  MODSEC_BRANCH: v3.0.4
+  OWASP_BRANCH: v3.3/master
+  DOCKER_USER: ci
 
 before_script:
-  - docker info
-  - apk add --no-cache docker-compose
+  - touch .env
+  - make --version
+  - docker --version
+  - make docker-login
 
 stages:
   - build
+  - push
 
-build:
-  retry: 2
+build:py:
   tags:
     - python
   stage: build
   script:
-    - make build
+    - make buildci-py
   only:
     refs:
       - merge_request
+      - main
 
-buildnc:
-  retry: 2
+build:node:
   tags:
     - python
   stage: build
   script:
-    - make buildnc
+    - make buildci-node
   only:
     refs:
-      - master
+      - merge_request
+      - main
+
+build:waf:
+  tags:
+    - python
+  stage: build
+  script:
+    - make buildci-waf
+  only:
+    refs:
+      - merge_request
+      - main
+
+build:runner:
+  tags:
+    - python
+  stage: build
+  script:
+    - make buildci-runner
+  only:
+    refs:
+      - merge_request
+      - main
+
+push:py:
+  tags:
+    - python
+  stage: push
+  script:
+    - make pushci-py
+  only:
+    refs:
+      - main
+
+push:node:
+  tags:
+    - python
+  stage: push
+  script:
+    - make pushci-node
+  only:
+    refs:
+      - main
+
+push:waf:
+  tags:
+    - python
+  stage: push
+  script:
+    - make pushci-waf
+  only:
+    refs:
+      - main
+
+push:runner:
+  tags:
+    - python
+  stage: push
+  script:
+    - make pushci-runner
+  only:
+    refs:
+      - main

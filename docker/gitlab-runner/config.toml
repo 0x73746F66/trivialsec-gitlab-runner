@@ -1,0 +1,14 @@
+concurrent = 1
+check_interval = 0
+
+[session_server]
+  session_timeout = 1800
+
+[[runners]]
+  name = "trivialsec-shared"
+  url = "https://gitlab.com/"
+  token = "syfx8jUxk2XCvVoo2oJh"
+  executor = "shell"
+  cache_dir = "/cache"
+  [runners.cache]
+    Insecure = false
