@@ -10,32 +10,92 @@ variables:
 before_script:
   - make --version
   - docker --version
-  - docker-compose --version
+  - make docker-login
 
 stages:
   - build
   - push
 
-build:
-  retry: 2
+build:python:
   tags:
     - python
   stage: build
   script:
-    - make buildci
+    - make buildci-py
   only:
     refs:
       - merge_request
       - main
 
-push:
-  retry: 2
+build:node:
   tags:
     - python
   stage: build
   script:
-    - make docker-login
-    - make push
+    - make buildci-node
+  only:
+    refs:
+      - merge_request
+      - main
+
+build:waf:
+  tags:
+    - python
+  stage: build
+  script:
+    - make buildci-waf
+  only:
+    refs:
+      - merge_request
+      - main
+
+build:runner:
+  tags:
+    - python
+  stage: build
+  script:
+    - make buildci-runner
+  only:
+    refs:
+      - merge_request
+      - main
+
+push:py:
+  tags:
+    - python
+  stage: push
+  script:
+    - make pushci-py
+  only:
+    refs:
+      - main
+
+push:node:
+  tags:
+    - python
+  stage: push
+  script:
+    - make pushci-node
+  only:
+    refs:
+      - main
+
+push:waf:
+  tags:
+    - python
+  stage: push
+  script:
+    - make pushci-waf
+  only:
+    refs:
+      - main
+
+push:runner:
+  tags:
+    - python
+  stage: push
+  script:
+    - make pushci-runner
   only:
     refs:
       - main

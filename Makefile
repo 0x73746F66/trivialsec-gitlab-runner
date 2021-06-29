@@ -38,6 +38,8 @@ buildci-py:
         --build-arg LC_ALL=C.UTF-8 \
         --build-arg LANG=C.UTF-8 \
 		./docker/python
+
+pushci-py:
 	docker push $(NAME_PY):${CI_BUILD_REF}
 	docker push $(NAME_PY):latest
 
@@ -50,6 +52,8 @@ buildci-node:
 		--build-arg NODE_ENV=${NODE_ENV} \
         --build-arg NODE_PATH=${NODE_PATH} \
 		./docker/node
+
+pushci-node:
 	docker push $(NAME_NODE):${CI_BUILD_REF}
 	docker push $(NAME_NODE):latest
 
@@ -64,16 +68,21 @@ buildci-waf:
         --build-arg MODSEC_BRANCH=${MODSEC_BRANCH} \
         --build-arg OWASP_BRANCH=${OWASP_BRANCH} \
 		./docker/waf
+
+pushci-waf:
 	docker push $(NAME_WAF):${CI_BUILD_REF}
 	docker push $(NAME_WAF):latest
 
 buildci-runner:
 	docker pull $(NAME_CI):latest
 	docker build --cache-from $(NAME_CI):latest --compress -t $(NAME_CI):${CI_BUILD_REF} -t $(NAME_CI):latest .
+
+pushci-runner:
 	docker push $(NAME_CI):${CI_BUILD_REF}
 	docker push $(NAME_CI):latest
 
 buildci: buildci-py buildci-node buildci-waf buildci-runner
+pushci: pushci-py pushci-node pushci-waf pushci-runner
 
 update: ## pulls images for: redis, mysql
 	docker-compose pull redis mysql
