@@ -1,49 +1,55 @@
-FROM docker.io/library/amazonlinux:2-with-sources
+FROM docker.io/library/python:3.8-slim
+LABEL org.opencontainers.image.authors="Christopher Langton"
+LABEL org.opencontainers.image.version="1.0.0"
+LABEL org.opencontainers.image.source="https://gitlab.com/trivialsec/containers-common"
 
-WORKDIR /srv/app
-RUN mkdir -p /var/cache/nginx \
+ARG PYTHONUTF8
+ARG PYTHONUNBUFFERED
+ARG LC_ALL
+ARG LANG
+ARG CFLAGS
+ARG STATICBUILD
+
+ENV PYTHONUTF8 ${PYTHONUTF8}
+ENV PYTHONUNBUFFERED ${PYTHONUNBUFFERED}
+ENV LC_ALL ${LC_ALL}
+ENV LANG ${LANG}
+ENV CFLAGS ${CFLAGS}
+ENV STATICBUILD ${STATICBUILD}}
+ENV PATH "${PATH}:/srv/app/.local/bin"
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN echo "Preparing folders..." && \
+        mkdir -p /var/log/uwsgi \
              /usr/share/man/man1mkdir \
              /usr/share/man/man1 && \
-    yum update -q -y && \
-    yum install -q -y deltarpm wget && \
-    yum groupinstall -q -y  "Development Tools" && \
-    update-ca-trust force-enable && \
-    wget -q http://repo.mysql.com/RPM-GPG-KEY-mysql -O /tmp/mysql.key && \
-    rpm --import /tmp/mysql.key && \
-    yum install -q -y https://repo.mysql.com/mysql80-community-release-el7-1.noarch.rpm && \
-    yum install -q -y https://nmap.org/dist/nmap-7.91-1.x86_64.rpm && \
-    amazon-linux-extras enable nginx1 >/dev/null && \
-    amazon-linux-extras enable python3.8 >/dev/null && \
-    yum install -q -y  \
-        nginx \
-        hostname \
-        python38 \
-        python38-pip \
-        python38-devel \
-        mysql-connector-python \
-        PyYAML \
-        python3-devel \
-        pcre-devel \
-        wget \
-        curl \
-        zip \
-        jq \
-        shadow-utils \
-        procps \
-        nano \
-        openjdk-11-jdk \
-        ldns && \
-    setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx && \
-    adduser --create-home --user-group ec2-user && \
-    yum clean metadata && \
-    yum -q -y clean all && \
-    chown -R ec2-user: \
-        /srv/app \
-        /var/log/nginx \
-        /var/lib/nginx \
-        /var/cache/nginx && \
-    python3.8 -m pip install -q --no-cache-dir -U pip && \
-    python3.8 -m pip install -q --no-cache-dir -U setuptools wheel awscli
+        touch /tmp/application.log && \
+        echo "Creating user and group..." && \
+        addgroup trivialsec && \
+        adduser --disabled-password --gecos '' --disabled-login --home /srv/app --ingroup trivialsec trivialsec && \
+        echo "Patching..." && \
+        apt-get update -q && \
+        apt-get upgrade -qy && \
+        echo "Installing Dependencies..." && \
+        apt-get install -qy --no-install-recommends \
+            build-essential wget curl bash jq openjdk-11-jdk tar zip \
+            ldnsutils logrotate ca-certificates openssl nmap libssl-dev \
+            python3-dev default-mysql-client && \
+        python3 -m pip install -q --no-cache-dir --no-warn-script-location -U pip && \
+        chown -R trivialsec:trivialsec /srv/app /var/log/uwsgi
 
+WORKDIR /srv/app
+USER trivialsec
+RUN python3 -m pip install -q --no-cache-dir --no-warn-script-location -U setuptools wheel pipx && \
+        pipx install awscli && \
+        pipx install uwsgi
+
+USER root
+RUN echo "Clean up..." && \
+        apt-get autoremove -y && \
+        apt-get clean && \
+        rm -rf /tmp/* /var/lib/apt/lists/*
+
+USER trivialsec
 ENTRYPOINT ["/usr/bin/env"]
-CMD ["tail", "-f", "/dev/null"]
+CMD ["/usr/bin/python3"]

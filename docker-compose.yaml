@@ -1,7 +1,6 @@
 version: '3.6'
 x-defaults: &defaults
   env_file: .env
-  network_mode: host
   restart: unless-stopped
   logging:
     options:
@@ -9,16 +8,22 @@ x-defaults: &defaults
       max-file: "3"
 
 services:
-  python-base:
+  python:
     env_file: .env
-    image: trivialsec/python-base
+    image: registry.gitlab.com/trivialsec/containers-common/python
     build:
       context: ./docker/python
       dockerfile: Dockerfile
-
-  node-base:
+      args:
+        PYTHONUNBUFFERED: 1
+        PYTHONUTF8: 1
+        CFLAGS: '-O0'
+        STATICBUILD: 1
+        LC_ALL: C.UTF-8
+        LANG: C.UTF-8
+  nodejs:
     env_file: .env
-    image: trivialsec/node-base
+    image: registry.gitlab.com/trivialsec/containers-common/nodejs
     build:
       context: ./docker/node
       dockerfile: Dockerfile
@@ -26,18 +31,28 @@ services:
       args:
         NODE_ENV: ${NODE_ENV}
         NODE_PATH: ${NODE_PATH}
+  waf:
+    env_file: .env
+    image: registry.gitlab.com/trivialsec/containers-common/waf
+    build:
+      context: ./docker/waf
+      dockerfile: Dockerfile
+      args:
+        NGINX_VERSION: ${NGINX_VERSION}
+        GEO_DB_RELEASE: ${GEO_DB_RELEASE}
+        MODSEC_BRANCH: ${MODSEC_BRANCH}
+        OWASP_BRANCH: ${OWASP_BRANCH}
 
   gitlab-runner:
     <<: *defaults
-    image: trivialsec/gitlab-runner
+    image: registry.gitlab.com/trivialsec/containers-common/gitlab-runner
     container_name: gitlab-runner
     build:
       context: ./docker/gitlab-runner
       dockerfile: Dockerfile
-      network: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - gitlab-runner-config:/etc/gitlab-runner:rw
+      - gitlab-cache:/cache:rw
 
   mysql:
     <<: *defaults
@@ -60,7 +75,11 @@ services:
       test: mysqladmin ping -h mysql
       timeout: 20s
       retries: 10
-
+    networks:
+      default:
+        aliases:
+          - mysql
+  
   redis:
     <<: *defaults
     image: docker.io/library/redis:5.0
@@ -71,14 +90,23 @@ services:
       - 6379
     volumes:
       - redis-datadir:/data
+    networks:
+      default:
+        aliases:
+          - redis
 
 volumes:
-  gitlab-runner-config:
-    external: true
-    name: gitlab-runner-config
   redis-datadir:
     external: true
     name: redis-datadir
   mysql-datadir:
     external: true
     name: mysql-datadir
+  gitlab-cache:
+    external: true
+    name: gitlab-cache
+
+networks:
+  default:
+    external:
+      name: trivialsec

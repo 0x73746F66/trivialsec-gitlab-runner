@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -e
+# gitlab-runner data directory
+DATA_DIR="/etc/gitlab-runner"
+CONFIG_FILE=${CONFIG_FILE:-$DATA_DIR/config.toml}
+# custom certificate authority path
+CA_CERTIFICATES_PATH=${CA_CERTIFICATES_PATH:-$DATA_DIR/certs/ca.crt}
+LOCAL_CA_PATH="/usr/local/share/ca-certificates/ca.crt"
+function update_ca() {
+  echo "Updating CA certificates..."
+  cp "${CA_CERTIFICATES_PATH}" "${LOCAL_CA_PATH}"
+  update-ca-certificates --fresh >/dev/null
+}
+[ -f "${CA_CERTIFICATES_PATH}" ] && (
+    cmp --silent "${CA_CERTIFICATES_PATH}" "${LOCAL_CA_PATH}" || update_ca
+)
+# allow dind for gitlab-runner uid 999
+setfacl --modify user:999:rw /var/run/docker.sock
+# launch gitlab-runner passing all arguments
+exec gitlab-runner "$@"
