@@ -33,8 +33,8 @@ RUN chmod a+x /custom-entrypoint \
     && apt-get install -y \
         terraform \
         docker-ce-cli \
-    && curl -s https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
-    && python3 get-pip.py \
+    && curl -s https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py \
+    && python3 /tmp/get-pip.py \
     && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /tmp/* /var/lib/apt/lists/* \
