@@ -5,7 +5,9 @@ ENV CFLAGS="-O0"
 ENV STATICBUILD=true
 
 COPY config.toml /etc/gitlab-runner/config.toml
-RUN apt-get update \
+COPY entrypoint /custom-entrypoint
+RUN chmod a+x /custom-entrypoint \
+    && apt-get update \
     && apt-get install -y --no-install-recommends \
         acl \
         build-essential \
@@ -31,7 +33,6 @@ RUN apt-get update \
     && apt-get install -y \
         terraform \
         docker-ce-cli \
-    && setfacl --modify user:999:rw /var/run/docker.sock \
     && curl -s https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
     && python3 get-pip.py \
     && apt-get autoremove -y \
@@ -40,5 +41,5 @@ RUN apt-get update \
     && terraform -install-autocomplete \
     && python3 -m pip install -q --no-cache-dir -U pip setuptools wheel awscli pylint semgrep
 
-USER root
 VOLUME [ "/etc/gitlab-runner" ]
+ENTRYPOINT /custom-entrypoint
