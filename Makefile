@@ -75,7 +75,11 @@ pushci-waf:
 
 buildci-runner:
 	docker pull $(NAME_CI):latest
-	docker build --cache-from $(NAME_CI):latest --compress -t $(NAME_CI):${CI_BUILD_REF} -t $(NAME_CI):latest .
+	docker build --compress \
+		--cache-from $(NAME_CI):latest \
+		-t $(NAME_CI):${CI_BUILD_REF} \
+		-t $(NAME_CI):latest \
+		./docker/gitlab-runner
 
 pushci-runner:
 	docker push $(NAME_CI):${CI_BUILD_REF}
