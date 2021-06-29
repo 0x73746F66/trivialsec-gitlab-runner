@@ -7,6 +7,7 @@ ENV STATICBUILD=true
 COPY config.toml /etc/gitlab-runner/config.toml
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        acl \
         build-essential \
         python3.8 \
         python3.8-distutils \
