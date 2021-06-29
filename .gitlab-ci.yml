@@ -6,7 +6,6 @@ variables:
   MODSEC_BRANCH: v3.0.4
   OWASP_BRANCH: v3.3/master
   DOCKER_USER: ci
-  RUNNER_TAGS: "python, docker"
 
 before_script:
   - touch .env
@@ -20,7 +19,7 @@ stages:
 
 build:py:
   tags:
-    - docker
+    - linode
   stage: build
   script:
     - make buildci-py
@@ -31,7 +30,7 @@ build:py:
 
 build:node:
   tags:
-    - docker
+    - linode
   stage: build
   script:
     - make buildci-node
@@ -53,7 +52,7 @@ build:waf:
 
 build:runner:
   tags:
-    - docker
+    - linode
   stage: build
   script:
     - make buildci-runner
@@ -64,7 +63,7 @@ build:runner:
 
 push:py:
   tags:
-    - docker
+    - linode
   stage: push
   script:
     - make pushci-py
@@ -74,7 +73,7 @@ push:py:
 
 push:node:
   tags:
-    - docker
+    - linode
   stage: push
   script:
     - make pushci-node
@@ -84,7 +83,7 @@ push:node:
 
 push:waf:
   tags:
-    - docker
+    - builder
   stage: push
   script:
     - make pushci-waf
@@ -94,7 +93,7 @@ push:waf:
 
 push:runner:
   tags:
-    - docker
+    - linode
   stage: push
   script:
     - make pushci-runner
