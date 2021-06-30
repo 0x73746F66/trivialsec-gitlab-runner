@@ -19,13 +19,7 @@ setup: ## Creates docker networks and volumes
 	docker volume create --name=mysql-datadir 2>/dev/null || true
 	docker volume create --name=gitlab-cache 2>/dev/null || true
 
-build: setup ## docker-compose build
-	docker-compose build --compress python nodejs waf gitlab-runner
-
-buildnc: setup ## docker-compose build --no-cache
-	docker-compose build --no-cache python nodejs waf gitlab-runner
-
-buildci-py:
+buildci-py: ## build python image
 	docker pull $(NAME_PY):latest
 	docker build --compress \
 		--cache-from $(NAME_PY):latest \
@@ -39,11 +33,11 @@ buildci-py:
         --build-arg LANG=C.UTF-8 \
 		./docker/python
 
-pushci-py:
+pushci-py: ## push built python image
 	docker push $(NAME_PY):${CI_BUILD_REF}
 	docker push $(NAME_PY):latest
 
-buildci-node:
+buildci-node: ## build nodejs image
 	docker pull $(NAME_NODE):latest
 	docker build --compress \
 		--cache-from $(NAME_NODE):latest \
@@ -53,11 +47,11 @@ buildci-node:
         --build-arg NODE_PATH=${NODE_PATH} \
 		./docker/node
 
-pushci-node:
+pushci-node: ## push built nodejs image
 	docker push $(NAME_NODE):${CI_BUILD_REF}
 	docker push $(NAME_NODE):latest
 
-buildci-waf:
+buildci-waf: ## build waf image
 	docker pull $(NAME_WAF):latest
 	docker build --compress \
 		--cache-from $(NAME_WAF):latest \
@@ -69,11 +63,11 @@ buildci-waf:
         --build-arg OWASP_BRANCH=${OWASP_BRANCH} \
 		./docker/waf
 
-pushci-waf:
+pushci-waf: ## push built waf image
 	docker push $(NAME_WAF):${CI_BUILD_REF}
 	docker push $(NAME_WAF):latest
 
-buildci-runner:
+buildci-runner: ## build gitlab-runner image
 	docker pull $(NAME_CI):latest
 	docker build --compress \
 		--cache-from $(NAME_CI):latest \
@@ -82,22 +76,19 @@ buildci-runner:
 		--build-arg RUNNER_TOKEN=${RUNNER_TOKEN} \
 		./docker/gitlab-runner
 
-pushci-runner:
+pushci-runner: ## push built gitlab-runner image
 	docker push $(NAME_CI):${CI_BUILD_REF}
 	docker push $(NAME_CI):latest
 
-buildci: buildci-py buildci-node buildci-waf buildci-runner
-pushci: pushci-py pushci-node pushci-waf pushci-runner
+build-ci: buildci-py buildci-node buildci-waf buildci-runner ## build docker images
+push-ci: pushci-py pushci-node pushci-waf pushci-runner ## push built images
 
-update: ## pulls images for: redis, mysql
-	docker-compose pull redis mysql
+update: ## pulls images
+	docker-compose pull
 
-rebuild: down build ## alias for down && build
+rebuild: down build-ci ## alias for down && build-ci
 
-push:
-	docker-compose push nodejs python waf gitlab-runner
-
-docker-login:
+docker-login: ## login to docker cli using $DOCKER_USER and $DOCKER_PASSWORD
 	@echo $(shell [ -z "${DOCKER_PASSWORD}" ] && echo "DOCKER_PASSWORD missing" )
 	@echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin registry.gitlab.com
 
@@ -132,13 +123,13 @@ up: update ## Starts latest container images for: redis, mysql
 down: ## Bring down containers
 	docker-compose down --remove-orphans
 
-build-local-runner:
+build-local-runner: ## build a local gitlab-runner
 	docker build \
 		--cache-from $(NAME_CI):latest \
 		-t $(NAME_CI):local \
 		./docker/gitlab-runner
 
-run-local-runner: build-local-runner
+run-local-runner: build-local-runner ## run a local gitlab-runner
 	@echo $(shell [ -z "${RUNNER_TOKEN}" ] && echo "RUNNER_TOKEN missing" )
 	docker run -d --rm \
 		--name gitlab-runner \
