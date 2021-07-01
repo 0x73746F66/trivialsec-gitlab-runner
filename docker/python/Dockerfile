@@ -20,7 +20,7 @@ ENV PATH "${PATH}:/srv/app/.local/bin"
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN echo "Preparing folders..." && \
-        mkdir -p /var/log/uwsgi \
+        mkdir -p \
              /usr/share/man/man1mkdir \
              /usr/share/man/man1 && \
         touch /tmp/application.log && \
@@ -36,13 +36,13 @@ RUN echo "Preparing folders..." && \
             ldnsutils logrotate ca-certificates openssl nmap libssl-dev \
             python3-dev default-mysql-client && \
         python3 -m pip install -q --no-cache-dir --no-warn-script-location -U pip && \
-        chown -R trivialsec:trivialsec /srv/app /var/log/uwsgi
+        chown -R trivialsec:trivialsec /srv/app
 
 WORKDIR /srv/app
 USER trivialsec
 RUN python3 -m pip install -q --no-cache-dir --no-warn-script-location -U setuptools wheel pipx && \
         pipx install awscli && \
-        pipx install uwsgi
+        pipx install gunicorn
 
 USER root
 RUN echo "Clean up..." && \
