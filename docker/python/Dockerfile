@@ -32,7 +32,7 @@ RUN echo "Preparing folders..." && \
         apt-get upgrade -qy && \
         echo "Installing Dependencies..." && \
         apt-get install -qy --no-install-recommends \
-            build-essential wget curl bash jq openjdk-11-jdk tar zip \
+            build-essential git wget curl bash jq openjdk-11-jdk tar zip \
             ldnsutils logrotate ca-certificates openssl nmap libssl-dev \
             python3-dev default-mysql-client && \
         python3 -m pip install -q --no-cache-dir --no-warn-script-location -U pip && \
