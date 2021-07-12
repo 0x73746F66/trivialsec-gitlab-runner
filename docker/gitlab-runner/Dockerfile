@@ -3,6 +3,7 @@ ENV RUNNER_TOKEN=${RUNNER_TOKEN}
 ENV DEBIAN_FRONTEND=noninteractive
 ENV CFLAGS="-O0"
 ENV STATICBUILD=true
+ENV PATH=$PATH:/usr/local/go/bin
 
 COPY config.toml /etc/gitlab-runner/config.toml
 COPY entrypoint /entrypoint
@@ -29,6 +30,11 @@ RUN chmod a+x /entrypoint \
     && curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - \
     && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
     && apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main" \
+    && curl -LO https://get.golang.org/Linux/go_installer \
+    && chmod +x go_installer \
+    && ./go_installer \
+    && rm go_installer \
+    && go get -u gitlab.com/gitlab-org/release-cli/... \
     && apt-get update \
     && apt-get install -y \
         terraform \
