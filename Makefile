@@ -67,6 +67,13 @@ pushci-waf: ## push built waf image
 	docker push $(NAME_WAF):${CI_BUILD_REF}
 	docker push $(NAME_WAF):latest
 
+deploy-key: ## fetches the gitlab-ci deploy key
+ifdef AWS_PROFILE
+	aws --profile $(AWS_PROFILE) s3 cp --only-show-errors s3://tfplans-trivialsec/deploy-keys/gitlab_ci docker/gitlab-runner/gitlab_ci
+else
+	aws s3 cp --only-show-errors s3://tfplans-trivialsec/deploy-keys/gitlab_ci docker/gitlab-runner/gitlab_ci
+endif
+
 buildci-runner: ## build gitlab-runner image
 	docker pull $(NAME_CI):latest
 	docker build --compress \
@@ -116,6 +123,9 @@ db-rebuild: ## runs drop tables sql script, then applies mysql schema and initia
 	docker-compose exec mysql bash -c "mysql -uroot -p'$(MYSQL_ROOT_PASSWORD)' -q -s < /tmp/sql/drop-tables.sql"
 	docker-compose exec mysql bash -c "mysql -uroot -p'$(MYSQL_ROOT_PASSWORD)' -q -s < /tmp/sql/schema.sql"
 	docker-compose exec mysql bash -c "mysql -uroot -p'$(MYSQL_ROOT_PASSWORD)' -q -s < /tmp/sql/init-data.sql"
+
+redis-flush:
+	docker-compose exec redis redis-cli FLUSHALL
 
 up: update ## Starts latest container images for: redis, mysql
 	docker-compose up -d redis mysql
