@@ -32,7 +32,7 @@ RUN chmod a+x /entrypoint \
     && apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main" \
     && curl -LO https://get.golang.org/Linux/go_installer \
     && chmod +x go_installer \
-    && ./go_installer \
+    && bash ./go_installer \
     && rm go_installer \
     && go get -u gitlab.com/gitlab-org/release-cli/... \
     && apt-get update \
