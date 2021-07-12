@@ -28,5 +28,4 @@ DROP TABLE IF EXISTS projects;
 DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS security_alerts;
 DROP TABLE IF EXISTS service_types;
-DROP TABLE IF EXISTS subscribers;
 DROP TABLE IF EXISTS webhooks;

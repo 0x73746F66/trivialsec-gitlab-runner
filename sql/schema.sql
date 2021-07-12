@@ -170,15 +170,6 @@ CREATE TABLE IF NOT EXISTS invitations (
     INDEX index_invitations_email (email)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS subscribers (
-    `subscriber_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `email` VARCHAR(255) NOT NULL,
-    `deleted` TINYINT NOT NULL DEFAULT '0',
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT pk_subscribers PRIMARY KEY (subscriber_id),
-    INDEX index_subscribers_email (email)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
-
 CREATE TABLE IF NOT EXISTS activity_logs (
     `activity_log_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `member_id` BIGINT UNSIGNED DEFAULT NULL,
