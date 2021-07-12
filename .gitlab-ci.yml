@@ -19,7 +19,7 @@ stages:
 
 build:py:
   tags:
-    - linode
+    - builder
   stage: build
   script:
     - make buildci-py
@@ -30,7 +30,7 @@ build:py:
 
 build:node:
   tags:
-    - linode
+    - builder
   stage: build
   script:
     - make buildci-node
@@ -52,7 +52,7 @@ build:waf:
 
 build:runner:
   tags:
-    - linode
+    - builder
   stage: build
   script:
     - make buildci-runner

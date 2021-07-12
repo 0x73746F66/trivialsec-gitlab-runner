@@ -1,5 +1,5 @@
 FROM docker.io/gitlab/gitlab-runner
-ARG GO_VERSION 1.16.5
+ARG GO_VERSION=1.16.5
 ENV RUNNER_TOKEN=${RUNNER_TOKEN}
 ENV DEBIAN_FRONTEND=noninteractive
 ENV CFLAGS="-O0"
@@ -31,8 +31,8 @@ RUN chmod a+x /entrypoint \
     && curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - \
     && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
     && apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main" \
-    && wget https://golang.org/dl/go$GO_VERSION.linux-amd64.tar.gz \
-    && tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz \
+    && wget https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz \
+    && tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz \
     && go version \
     && go get -u gitlab.com/gitlab-org/release-cli/... \
     && apt-get update \

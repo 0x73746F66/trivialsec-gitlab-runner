@@ -46,7 +46,6 @@ services:
   gitlab-runner:
     <<: *defaults
     image: registry.gitlab.com/trivialsec/containers-common/gitlab-runner
-    container_name: gitlab-runner
     build:
       context: ./docker/gitlab-runner
       dockerfile: Dockerfile
