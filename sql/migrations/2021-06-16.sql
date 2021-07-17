@@ -1,0 +1,13 @@
+DROP TABLE IF EXISTS subscribers;
+ALTER TABLE members CHANGE COLUMN `password` scratch_code VARCHAR(255) DEFAULT NULL;
+
+CREATE TABLE IF NOT EXISTS member_mfa (
+    `member_id` BIGINT UNSIGNED NOT NULL,
+    `type` VARCHAR(16) NOT NULL,
+    `name` VARCHAR(255) DEFAULT NULL,
+    `webauthn_id` TEXT DEFAULT NULL,
+    `webauthn_public_key` TEXT DEFAULT NULL,
+    `webauthn_challenge` VARCHAR(255) DEFAULT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_member_mfa PRIMARY KEY (member_id)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
