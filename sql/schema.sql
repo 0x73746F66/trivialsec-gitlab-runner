@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS roles (
 CREATE TABLE IF NOT EXISTS members (
     `member_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `email` VARCHAR(255) NOT NULL,
-    `password` VARCHAR(255) DEFAULT NULL,
+    `scratch_code` VARCHAR(255) DEFAULT NULL,
     `account_id` BIGINT UNSIGNED NOT NULL,
     `verified` TINYINT NOT NULL DEFAULT '0',
     `confirmation_url` VARCHAR(255) NOT NULL,
@@ -132,6 +132,17 @@ CREATE TABLE IF NOT EXISTS api_keys (
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_api_keys PRIMARY KEY (api_key),
     INDEX index_api_keys_comment (`comment`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
+
+CREATE TABLE IF NOT EXISTS member_mfa (
+    `member_id` BIGINT UNSIGNED NOT NULL,
+    `type` VARCHAR(16) NOT NULL,
+    `name` VARCHAR(255) DEFAULT NULL,
+    `webauthn_id` TEXT DEFAULT NULL,
+    `webauthn_public_key` TEXT DEFAULT NULL,
+    `webauthn_challenge` VARCHAR(255) DEFAULT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_member_mfa PRIMARY KEY (member_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
 
 CREATE TABLE IF NOT EXISTS webhooks (

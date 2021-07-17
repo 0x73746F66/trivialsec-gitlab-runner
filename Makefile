@@ -20,8 +20,8 @@ setup: ## Creates docker networks and volumes
 	docker volume create --name=gitlab-cache 2>/dev/null || true
 
 buildci-py: ## build python image
-	docker pull $(NAME_PY):latest
-	docker build --compress \
+	docker pull -q $(NAME_PY):latest
+	docker build -q --compress \
 		--cache-from $(NAME_PY):latest \
 		-t $(NAME_PY):${CI_BUILD_REF} \
 		-t $(NAME_PY):latest \
@@ -34,12 +34,12 @@ buildci-py: ## build python image
 		./docker/python
 
 pushci-py: ## push built python image
-	docker push $(NAME_PY):${CI_BUILD_REF}
-	docker push $(NAME_PY):latest
+	docker push -q $(NAME_PY):${CI_BUILD_REF}
+	docker push -q $(NAME_PY):latest
 
 buildci-node: ## build nodejs image
-	docker pull $(NAME_NODE):latest
-	docker build --compress \
+	docker pull -q $(NAME_NODE):latest
+	docker build -q --compress \
 		--cache-from $(NAME_NODE):latest \
 		-t $(NAME_NODE):${CI_BUILD_REF} \
 		-t $(NAME_NODE):latest \
@@ -48,12 +48,12 @@ buildci-node: ## build nodejs image
 		./docker/node
 
 pushci-node: ## push built nodejs image
-	docker push $(NAME_NODE):${CI_BUILD_REF}
-	docker push $(NAME_NODE):latest
+	docker push -q $(NAME_NODE):${CI_BUILD_REF}
+	docker push -q $(NAME_NODE):latest
 
 buildci-waf: ## build waf image
-	docker pull $(NAME_WAF):latest
-	docker build --compress \
+	docker pull -q $(NAME_WAF):latest
+	docker build -q --compress \
 		--cache-from $(NAME_WAF):latest \
 		-t $(NAME_WAF):${CI_BUILD_REF} \
 		-t $(NAME_WAF):latest \
@@ -64,8 +64,8 @@ buildci-waf: ## build waf image
 		./docker/waf
 
 pushci-waf: ## push built waf image
-	docker push $(NAME_WAF):${CI_BUILD_REF}
-	docker push $(NAME_WAF):latest
+	docker push -q $(NAME_WAF):${CI_BUILD_REF}
+	docker push -q $(NAME_WAF):latest
 
 deploy-key: ## fetches the gitlab-ci deploy key
 ifdef AWS_PROFILE
@@ -75,8 +75,8 @@ else
 endif
 
 buildci-runner: ## build gitlab-runner image
-	docker pull $(NAME_CI):latest
-	docker build --compress \
+	docker pull -q $(NAME_CI):latest
+	docker build -q --compress \
 		--cache-from $(NAME_CI):latest \
 		-t $(NAME_CI):${CI_BUILD_REF} \
 		-t $(NAME_CI):latest \
@@ -84,8 +84,8 @@ buildci-runner: ## build gitlab-runner image
 		./docker/gitlab-runner
 
 pushci-runner: ## push built gitlab-runner image
-	docker push $(NAME_CI):${CI_BUILD_REF}
-	docker push $(NAME_CI):latest
+	docker push -q $(NAME_CI):${CI_BUILD_REF}
+	docker push -q $(NAME_CI):latest
 
 build-ci: buildci-py buildci-node buildci-waf buildci-runner ## build docker images
 push-ci: pushci-py pushci-node pushci-waf pushci-runner ## push built images
@@ -134,7 +134,7 @@ down: ## Bring down containers
 	docker-compose down --remove-orphans
 
 build-local-runner: ## build a local gitlab-runner
-	docker build \
+	docker build -q \
 		--cache-from $(NAME_CI):latest \
 		-t $(NAME_CI):local \
 		./docker/gitlab-runner
