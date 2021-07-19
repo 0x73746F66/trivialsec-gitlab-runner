@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS members (
     `scratch_code` VARCHAR(255) DEFAULT NULL,
     `account_id` BIGINT UNSIGNED NOT NULL,
     `verified` TINYINT NOT NULL DEFAULT '0',
-    `confirmation_url` VARCHAR(255) NOT NULL,
+    `confirmation_url` VARCHAR(255) DEFAULT NULL,
     `confirmation_sent` TINYINT NOT NULL DEFAULT '0',
     `registered` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_members PRIMARY KEY (member_id),

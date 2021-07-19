@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS subscribers;
-ALTER TABLE members CHANGE COLUMN `password` scratch_code VARCHAR(255) DEFAULT NULL;
+ALTER TABLE members CHANGE COLUMN `password` `scratch_code` VARCHAR(255) DEFAULT NULL;
+ALTER TABLE members CHANGE COLUMN `confirmation_url` `confirmation_url` VARCHAR(255) DEFAULT NULL;
 
 CREATE TABLE IF NOT EXISTS member_mfa (
     `mfa_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
