@@ -170,7 +170,7 @@ CREATE TABLE IF NOT EXISTS members_roles (
 CREATE TABLE IF NOT EXISTS invitations (
     `invitation_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `account_id` BIGINT UNSIGNED NOT NULL,
-    `invited_by_member_id` BIGINT UNSIGNED NOT NULL,
+    `invited_by_member_id` BIGINT UNSIGNED DEFAULT NULL,
     `member_id` BIGINT UNSIGNED DEFAULT NULL,
     `role_id` BIGINT UNSIGNED NOT NULL,
     `message` TEXT DEFAULT NULL,

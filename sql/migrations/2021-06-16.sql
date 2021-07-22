@@ -1,8 +1,9 @@
-DROP TABLE IF EXISTS subscribers;
-ALTER TABLE members CHANGE COLUMN `password` `scratch_code` VARCHAR(255) DEFAULT NULL;
-ALTER TABLE members CHANGE COLUMN `confirmation_url` `confirmation_url` VARCHAR(255) DEFAULT NULL;
+DROP TABLE IF EXISTS `subscribers`;
+ALTER TABLE `members` CHANGE COLUMN `password` `scratch_code` VARCHAR(255) DEFAULT NULL;
+ALTER TABLE `members` CHANGE COLUMN `confirmation_url` `confirmation_url` VARCHAR(255) DEFAULT NULL;
+ALTER TABLE `invitations` CHANGE COLUMN `invited_by_member_id` `invited_by_member_id` BIGINT UNSIGNED DEFAULT NULL;
 
-CREATE TABLE IF NOT EXISTS member_mfa (
+CREATE TABLE IF NOT EXISTS `member_mfa` (
     `mfa_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `member_id` BIGINT UNSIGNED NOT NULL,
     `type` VARCHAR(16) NOT NULL,
@@ -13,6 +14,6 @@ CREATE TABLE IF NOT EXISTS member_mfa (
     `webauthn_public_key` TEXT DEFAULT NULL,
     `webauthn_challenge` VARCHAR(255) DEFAULT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    INDEX index_member_mfa_member_id_type (`member_id`, `type`),
-    CONSTRAINT pk_member_mfa PRIMARY KEY (mfa_id)
+    INDEX `index_member_mfa_member_id_type` (`member_id`, `type`),
+    CONSTRAINT `pk_member_mfa` PRIMARY KEY (`mfa_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
