@@ -127,7 +127,6 @@ CREATE TABLE IF NOT EXISTS api_keys (
     `api_key_secret` VARCHAR(255) NOT NULL,
     `comment` VARCHAR(255) NOT NULL,
     `member_id` BIGINT UNSIGNED NOT NULL,
-    `allowed_origin` VARCHAR(255) NOT NULL,
     `active` TINYINT NOT NULL DEFAULT '0',
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_api_keys PRIMARY KEY (api_key),

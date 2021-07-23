@@ -10,7 +10,7 @@ INSERT INTO accounts ( `alias`, `billing_email`, `socket_key`, `verification_has
 INSERT INTO members ( `email`, `account_id`, `scratch_code`, `verified`, `confirmation_url` ) VALUES ( 'support@trivialsec.com', 1, 'D954-49B2DE-FC6276C6-ECDA2E', 1, 'support');
 INSERT INTO members_roles ( `member_id`, `role_id` ) VALUES ( 1, 1 );
 INSERT INTO members_roles ( `member_id`, `role_id` ) VALUES ( 1, 5 );
-INSERT INTO api_keys (`api_key`, `api_key_secret`, `comment`, `member_id`, `allowed_origin`, `active`) VALUES ('0CBD6369526457CEBEA116273EBF1FCB', 'aca3d029ee5650eb8f8467aa22136e5d', 'public-api', 1, 'https://www.trivialsec', 1);
+INSERT INTO api_keys (`api_key`, `api_key_secret`, `comment`, `member_id`, `active`) VALUES ('0CBD6369526457CEBEA116273EBF1FCB', 'aca3d029ee5650eb8f8467aa22136e5d', 'public-api', 1, 1);
 INSERT INTO webhooks (`account_id`, `webhook_secret`, `comment`, `target`, `active`) VALUES (1, '38B7329E11F45058A6D4389AC792631A', 'webhook', 'https://api.trivialsec/webhooks/trivialsec', 1);
 INSERT INTO plans (`account_id`, `name`, `stripe_customer_id`) VALUES (1, 'Internal', 'cus_IjA67Itbk3PAjp');
 
