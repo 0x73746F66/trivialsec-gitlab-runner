@@ -270,24 +270,53 @@ CREATE TABLE IF NOT EXISTS domain_stats (
 CREATE TABLE IF NOT EXISTS cves (
     `cve_id` VARCHAR(16) NOT NULL,
     `assigner` VARCHAR(255) NOT NULL,
+    `title` VARCHAR(255) DEFAULT NULL,
     `description` TEXT NOT NULL,
     `cvss_version` VARCHAR(255) DEFAULT NULL,
     `vector` VARCHAR(255) DEFAULT NULL,
     `base_score` DECIMAL(10,1) UNSIGNED DEFAULT NULL,
     `exploitability_score` DECIMAL(10,1) UNSIGNED DEFAULT NULL,
     `impact_score` DECIMAL(10,1) UNSIGNED DEFAULT NULL,
+    `temporal_score` DECIMAL(10,1) UNSIGNED DEFAULT NULL,
+    `reported_at` DATETIME DEFAULT NULL,
     `published_at` DATETIME DEFAULT NULL,
     `last_modified` DATETIME DEFAULT NULL,
     CONSTRAINT pk_cves PRIMARY KEY (cve_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS cve_exploits (
+    `cve_id` VARCHAR(16) NOT NULL,
+    `source` VARCHAR(255) NOT NULL,
+    `source_id` VARCHAR(255) NOT NULL,
+    `source_url` TEXT DEFAULT NULL,
+    `title` TEXT DEFAULT NULL,
+    `published_at` DATE NOT NULL,
+    `author` VARCHAR(255) NOT NULL,
+    `author_url` TEXT DEFAULT NULL,
+    `verified` TINYINT DEFAULT '0',
+    CONSTRAINT pk_cve_exploits PRIMARY KEY (`cve_id`, `source_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS cve_remediation (
+    `cve_id` VARCHAR(16) NOT NULL,
+    `type` VARCHAR(255) NOT NULL,
+    `source` VARCHAR(255) NOT NULL,
+    `source_id` VARCHAR(255) NOT NULL,
+    `source_url` TEXT DEFAULT NULL,
+    `description` TEXT DEFAULT NULL,
+    `published_at` DATE NOT NULL,
+    `author` VARCHAR(255) NOT NULL,
+    `author_url` TEXT DEFAULT NULL,
+    `verified` TINYINT DEFAULT '0',
+    CONSTRAINT pk_cve_exploits PRIMARY KEY (`cve_id`, `source_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS cve_references (
     `cve_id` VARCHAR(16) NOT NULL,
-    `url` VARCHAR(255) NOT NULL,
+    `url` TEXT NOT NULL,
     `name` TEXT NOT NULL,
     `source` VARCHAR(255) NOT NULL,
-    `tags` VARCHAR(255) NOT NULL,
-    CONSTRAINT pk_cve_references PRIMARY KEY (`cve_id`, `url`)
+    `tags` VARCHAR(255) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS cve_cpes (
@@ -295,7 +324,7 @@ CREATE TABLE IF NOT EXISTS cve_cpes (
     `cpe` VARCHAR(255) NOT NULL,
     `version_end_excluding` VARCHAR(255) DEFAULT NULL,
     CONSTRAINT pk_cve_cpes PRIMARY KEY (`cve_id`, `cpe`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
 
 CREATE TABLE IF NOT EXISTS cwes (
     `cwe_id` VARCHAR(16) NOT NULL,

@@ -69,9 +69,9 @@ pushci-waf: ## push built waf image
 
 deploy-key: ## fetches the gitlab-ci deploy key
 ifdef AWS_PROFILE
-	aws --profile $(AWS_PROFILE) s3 cp --only-show-errors s3://tfplans-trivialsec/deploy-keys/gitlab_ci docker/gitlab-runner/gitlab_ci
+	aws --profile $(AWS_PROFILE) s3 cp --only-show-errors s3://stateful-trivialsec/deploy-keys/gitlab_ci docker/gitlab-runner/gitlab_ci
 else
-	aws s3 cp --only-show-errors s3://tfplans-trivialsec/deploy-keys/gitlab_ci docker/gitlab-runner/gitlab_ci
+	aws s3 cp --only-show-errors s3://stateful-trivialsec/deploy-keys/gitlab_ci docker/gitlab-runner/gitlab_ci
 endif
 
 buildci-runner: ## build gitlab-runner image
