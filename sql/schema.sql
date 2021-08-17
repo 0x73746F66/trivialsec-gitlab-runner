@@ -304,11 +304,8 @@ CREATE TABLE IF NOT EXISTS cve_remediation (
     `source_id` VARCHAR(255) NOT NULL,
     `source_url` TEXT DEFAULT NULL,
     `description` TEXT DEFAULT NULL,
-    `published_at` DATE NOT NULL,
-    `author` VARCHAR(255) NOT NULL,
-    `author_url` TEXT DEFAULT NULL,
-    `verified` TINYINT DEFAULT '0',
-    CONSTRAINT pk_cve_exploits PRIMARY KEY (`cve_id`, `source_id`)
+    `published_at` DATETIME DEFAULT NULL,
+    CONSTRAINT pk_cve_remediation PRIMARY KEY (`cve_id`, `source_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS cve_references (
