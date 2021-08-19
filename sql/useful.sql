@@ -87,3 +87,41 @@ left join members m on i.member_id = m.member_id
 left join roles r on i.role_id = r.role_id
 left join accounts a on i.account_id = a.account_id
 left join plans p on a.account_id = p.account_id
+
+-- jobs
+
+SELECT 
+	j.job_run_id,
+    d.domain_id,
+    d.parent_domain_id,
+    d.name,
+	j.account_id,
+	j.project_id,
+	j.state,
+	j.node_id,
+	j.priority,
+    j.queue_data ->> "$.scan_type" AS scan_type,
+    j.queue_data ->> "$.service_type_name" AS service_type_name,
+    j.queue_data ->> "$.service_type_category" AS service_type_category,
+	j.created_at,
+	j.started_at,
+	j.updated_at,
+	j.completed_at,
+	j.worker_message,
+	d.source,
+    j.queue_data ->> "$.report_summary" AS report_summary,
+    j.queue_data ->> "$.job_uuid" AS uuid,
+    j.queue_data ->> "$.on_demand" AS on_demand,
+    j.queue_data ->> "$.scan_next" AS scan_next,
+    d.deleted
+FROM job_runs j
+LEFT JOIN domains d ON j.queue_data ->> "$.target" = d.name
+ORDER BY d.domain_id
+
+-- db size
+
+SELECT table_schema "DB Name",
+        ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) "DB Size in MB" 
+FROM information_schema.tables 
+GROUP BY table_schema; 
+
