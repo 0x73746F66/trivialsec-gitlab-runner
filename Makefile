@@ -16,7 +16,8 @@ NAME_CI     = registry.gitlab.com/trivialsec/containers-common/gitlab-runner
 setup: ## Creates docker networks and volumes
 	docker network create trivialsec 2>/dev/null || true
 	docker volume create --name=redis-datadir 2>/dev/null || true
-	docker volume create --name=mysql-datadir 2>/dev/null || true
+	docker volume create --name=mysql-main-data 2>/dev/null || true
+	docker volume create --name=mysql-replica-data 2>/dev/null || true
 	docker volume create --name=gitlab-cache 2>/dev/null || true
 
 buildci-py: ## build python image
@@ -114,21 +115,21 @@ docker-purge: ## thorough docker environment cleanup
 	sudo service docker start
 
 db-create: ## applies mysql schema and initial data
-	docker-compose exec mysql bash -c "mysql -uroot -p'$(MYSQL_ROOT_PASSWORD)' -q -s < /tmp/sql/schema.sql"
-	docker-compose exec mysql bash -c "mysql -uroot -p'$(MYSQL_ROOT_PASSWORD)' -q -s < /tmp/sql/init-data.sql"
+	docker-compose exec mysql-main bash -c "mysql -uroot -p'$(MYSQL_MAIN_PASSWORD)' -q -s < /tmp/sql/schema.sql"
+	docker-compose exec mysql-main bash -c "mysql -uroot -p'$(MYSQL_MAIN_PASSWORD)' -q -s < /tmp/sql/init-data.sql"
 
 db-rebuild: ## runs drop tables sql script, then applies mysql schema and initial data
-	docker-compose up -d mysql
+	docker-compose up -d mysql-main
 	sleep 5
-	docker-compose exec mysql bash -c "mysql -uroot -p'$(MYSQL_ROOT_PASSWORD)' -q -s < /tmp/sql/drop-tables.sql"
-	docker-compose exec mysql bash -c "mysql -uroot -p'$(MYSQL_ROOT_PASSWORD)' -q -s < /tmp/sql/schema.sql"
-	docker-compose exec mysql bash -c "mysql -uroot -p'$(MYSQL_ROOT_PASSWORD)' -q -s < /tmp/sql/init-data.sql"
+	docker-compose exec mysql-main bash -c "mysql -uroot -p'$(MYSQL_MAIN_PASSWORD)' -q -s < /tmp/sql/drop-tables.sql"
+	docker-compose exec mysql-main bash -c "mysql -uroot -p'$(MYSQL_MAIN_PASSWORD)' -q -s < /tmp/sql/schema.sql"
+	docker-compose exec mysql-main bash -c "mysql -uroot -p'$(MYSQL_MAIN_PASSWORD)' -q -s < /tmp/sql/init-data.sql"
 
 redis-flush:
 	docker-compose exec redis redis-cli FLUSHALL
 
 up: update ## Starts latest container images for: redis, mysql
-	docker-compose up -d redis mysql
+	docker-compose up -d redis mysql-main mysql-replica
 
 down: ## Bring down containers
 	docker-compose down --remove-orphans

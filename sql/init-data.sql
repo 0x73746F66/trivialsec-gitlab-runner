@@ -7,7 +7,7 @@ INSERT INTO roles ( `name` ) VALUES ( 'Audit' );
 INSERT INTO roles ( `name`, `internal_only` ) VALUES ( 'Support', 1 );
 
 INSERT INTO accounts ( `alias`, `billing_email`, `socket_key`, `verification_hash` ) VALUES ( 'root', 'accounts@trivialsec.com', '886313e1-3b8a-5372-9b90-0c9aee199e5d', 'oajrzBUbE42xvAi07CTLljRSiQTNdzR9OHhzB5zLXiA');
-INSERT INTO members ( `email`, `account_id`, `scratch_code`, `verified`, `confirmation_url` ) VALUES ( 'support@trivialsec.com', 1, 'D954-49B2DE-FC6276C6-ECDA2E', 1, 'support');
+INSERT INTO members ( `email`, `account_id`, `scratch_code`, `verified`, `confirmation_url` ) VALUES ( 'support@trivialsec.com', 1, 'D954-49B2DE-FC6276C6-ECDA2E', 0, '/confirmation/dev-setup');
 INSERT INTO members_roles ( `member_id`, `role_id` ) VALUES ( 1, 1 );
 INSERT INTO members_roles ( `member_id`, `role_id` ) VALUES ( 1, 5 );
 INSERT INTO api_keys (`api_key`, `api_key_secret`, `comment`, `member_id`, `active`) VALUES ('0CBD6369526457CEBEA116273EBF1FCB', 'aca3d029ee5650eb8f8467aa22136e5d', 'public-api', 1, 1);

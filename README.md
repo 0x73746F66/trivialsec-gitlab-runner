@@ -47,3 +47,13 @@ docker-compose up -d --scale gitlab-runner=5 gitlab-runner
 
 ## Node.js base image
 
+## Mysql main and replica
+
+- Ensure you run `make setup` to create docker volumes
+- Start `docker-compose up -d mysql-main` but don't run any create statements yet
+- then connect and run `GRANT REPLICATION SLAVE ON *.* TO "root"@"%"; FLUSH PRIVILEGES;`
+- then run `SHOW MASTER STATUS` and note the log file and position
+- Start `docker-compose up -d mysql-replica`
+- then connect and run `CHANGE MASTER TO MASTER_HOST='mysql-main', MASTER_USER='root', MASTER_PASSWORD='<your password>', MASTER_LOG_FILE='<log file from main>', MASTER_LOG_POS=<position from main>; START SLAVE;`
+- connect to main and run `schema.sql` and `init-data.sql`
+- connect to replica and confirm schema and data replicated

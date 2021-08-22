@@ -57,20 +57,21 @@ services:
       RUNNER_TAGS: ${RUNNER_TAGS}
       RUNNER_NAME: ${RUNNER_NAME}
 
-  mysql:
+  mysql-replica:
     <<: *defaults
     image: docker.io/library/mysql:8
-    container_name: mysql
+    container_name: mysql-replica
+    hostname: mysql-replica
     command: 'mysqld --bind-address=0.0.0.0'
     volumes:
-      - mysql-datadir:/var/lib/mysql
-      - ./sql:/tmp/sql
+      - mysql-replica:/var/lib/mysql
+      - ./docker/mysql/replica.cnf:/etc/mysql/conf.d/replica.cnf
     ports:
-      - 3306:3306
+      - 33306:3306
     expose:
       - 3306
     environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_REPLICA_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
     security_opt:
       - seccomp:"./docker/seccomp-mysql.json"
@@ -81,8 +82,36 @@ services:
     networks:
       default:
         aliases:
-          - mysql
-  
+          - mysql-replica
+
+  mysql-main:
+    <<: *defaults
+    image: docker.io/library/mysql:8
+    container_name: mysql-main
+    hostname: mysql-main
+    command: 'mysqld --bind-address=0.0.0.0'
+    volumes:
+      - mysql-main:/var/lib/mysql
+      - ./docker/mysql/main.cnf:/etc/mysql/conf.d/main.cnf
+      - ./sql:/tmp/sql
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_MAIN_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    security_opt:
+      - seccomp:"./docker/seccomp-mysql.json"
+    healthcheck:
+      test: mysqladmin ping -h mysql
+      timeout: 20s
+      retries: 10
+    networks:
+      default:
+        aliases:
+          - mysql-main
+
   redis:
     <<: *defaults
     image: docker.io/library/redis:5.0
@@ -102,9 +131,12 @@ volumes:
   redis-datadir:
     external: true
     name: redis-datadir
-  mysql-datadir:
+  mysql-main:
     external: true
-    name: mysql-datadir
+    name: mysql-main-data
+  mysql-replica:
+    external: true
+    name: mysql-replica-data
   gitlab-cache:
     external: true
     name: gitlab-cache
