@@ -1,7 +1,6 @@
-version: '3.6'
+version: '3.9'
 x-defaults: &defaults
   env_file: .env
-  restart: unless-stopped
   logging:
     options:
       max-size: "10m"
@@ -42,6 +41,19 @@ services:
         GEO_DB_RELEASE: ${GEO_DB_RELEASE}
         MODSEC_BRANCH: ${MODSEC_BRANCH}
         OWASP_BRANCH: ${OWASP_BRANCH}
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 0s
+        max_attempts: 10
+        window: 3s
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 1GB
+        reservations:
+          cpus: '0.50'
+          memory: 500M
 
   gitlab-runner:
     <<: *defaults
@@ -56,6 +68,19 @@ services:
       RUNNER_TOKEN: ${RUNNER_TOKEN}
       RUNNER_TAGS: ${RUNNER_TAGS}
       RUNNER_NAME: ${RUNNER_NAME}
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 0s
+        max_attempts: 10
+        window: 3s
+      resources:
+        limits:
+          cpus: '2.00'
+          memory: 2GB
+        reservations:
+          cpus: '1.00'
+          memory: 1GB
 
   mysql-replica:
     <<: *defaults
@@ -83,6 +108,19 @@ services:
       default:
         aliases:
           - mysql-replica
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 0s
+        max_attempts: 10
+        window: 3s
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 1GB
+        reservations:
+          cpus: '0.50'
+          memory: 500M
 
   mysql-main:
     <<: *defaults
@@ -111,6 +149,19 @@ services:
       default:
         aliases:
           - mysql-main
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 0s
+        max_attempts: 10
+        window: 3s
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 1GB
+        reservations:
+          cpus: '0.50'
+          memory: 500M
 
   redis:
     <<: *defaults
@@ -126,6 +177,19 @@ services:
       default:
         aliases:
           - redis
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 0s
+        max_attempts: 10
+        window: 3s
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 1GB
+        reservations:
+          cpus: '0.50'
+          memory: 500M
 
 volumes:
   redis-datadir:
