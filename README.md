@@ -54,6 +54,12 @@ docker-compose up -d --scale gitlab-runner=5 gitlab-runner
 - then connect and run `GRANT REPLICATION SLAVE ON *.* TO "root"@"%"; FLUSH PRIVILEGES;`
 - then run `SHOW MASTER STATUS` and note the log file and position
 - Start `docker-compose up -d mysql-replica`
-- then connect and run `CHANGE MASTER TO MASTER_HOST='mysql-main', MASTER_USER='root', MASTER_PASSWORD='<your password>', MASTER_LOG_FILE='<log file from main>', MASTER_LOG_POS=<position from main>; START SLAVE;`
+- then connect and run:
+```
+STOP SLAVE;
+CHANGE MASTER TO GET_MASTER_PUBLIC_KEY=1;
+CHANGE MASTER TO MASTER_HOST='mysql-main', MASTER_USER='root', MASTER_PASSWORD='2110Hawa11', MASTER_LOG_FILE='mysql-bin.000001', MASTER_LOG_POS=0;
+START SLAVE;
+```
 - connect to main and run `schema.sql` and `init-data.sql`
 - connect to replica and confirm schema and data replicated
