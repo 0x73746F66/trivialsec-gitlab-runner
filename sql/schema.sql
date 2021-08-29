@@ -269,23 +269,6 @@ CREATE TABLE IF NOT EXISTS domain_stats (
     INDEX index_domain_stats_stat (domain_id, domain_stat)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS cves (
-    `cve_id` VARCHAR(16) NOT NULL,
-    `assigner` VARCHAR(255) NOT NULL,
-    `title` VARCHAR(255) DEFAULT NULL,
-    `description` TEXT NOT NULL,
-    `cvss_version` VARCHAR(255) DEFAULT NULL,
-    `vector` VARCHAR(255) DEFAULT NULL,
-    `base_score` DECIMAL(10,1) UNSIGNED DEFAULT NULL,
-    `exploitability_score` DECIMAL(10,1) UNSIGNED DEFAULT NULL,
-    `impact_score` DECIMAL(10,1) UNSIGNED DEFAULT NULL,
-    `temporal_score` DECIMAL(10,1) UNSIGNED DEFAULT NULL,
-    `reported_at` DATETIME DEFAULT NULL,
-    `published_at` DATETIME DEFAULT NULL,
-    `last_modified` DATETIME DEFAULT NULL,
-    CONSTRAINT pk_cves PRIMARY KEY (cve_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 CREATE TABLE IF NOT EXISTS cve_exploits (
     `cve_id` VARCHAR(16) NOT NULL,
     `source` VARCHAR(255) NOT NULL,
@@ -309,44 +292,6 @@ CREATE TABLE IF NOT EXISTS cve_remediation (
     `published_at` DATETIME DEFAULT NULL,
     CONSTRAINT pk_cve_remediation PRIMARY KEY (`cve_id`, `source_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS cve_references (
-    `cve_id` VARCHAR(16) NOT NULL,
-    `url` TEXT NOT NULL,
-    `name` TEXT NOT NULL,
-    `source` VARCHAR(255) NOT NULL,
-    `tags` VARCHAR(255) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS cve_cpes (
-    `cve_id` VARCHAR(16) NOT NULL,
-    `cpe` VARCHAR(255) NOT NULL,
-    `version_end_excluding` VARCHAR(255) DEFAULT NULL,
-    CONSTRAINT pk_cve_cpes PRIMARY KEY (`cve_id`, `cpe`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
-
-CREATE TABLE IF NOT EXISTS cwes (
-    `cwe_id` VARCHAR(16) NOT NULL,
-    `name` VARCHAR(255) NOT NULL,
-    `description` TEXT NOT NULL,
-    `status` VARCHAR(255) NOT NULL,
-    `introduced` TEXT DEFAULT NULL,
-    `impact` TEXT DEFAULT NULL,
-    `detection` TEXT DEFAULT NULL,
-    `mitigation` TEXT DEFAULT NULL,
-    `platform` VARCHAR(255) DEFAULT NULL,
-    `platform_windows` TINYINT DEFAULT '0',
-    `platform_macos` TINYINT DEFAULT '0',
-    `platform_unix` TINYINT DEFAULT '0',
-    `platform_language` VARCHAR(255) DEFAULT NULL,
-    CONSTRAINT pk_cwes PRIMARY KEY (cwe_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS cwe_cve (
-    `cve_id` VARCHAR(16) NOT NULL,
-    `cwe_id` VARCHAR(16) NOT NULL,
-    CONSTRAINT pk_cwe_cve PRIMARY KEY (cve_id, cwe_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
 
 CREATE TABLE IF NOT EXISTS findings (
     `finding_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,

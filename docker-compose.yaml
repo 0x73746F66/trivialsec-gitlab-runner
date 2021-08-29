@@ -191,7 +191,49 @@ services:
           cpus: '0.50'
           memory: 500M
 
+  elasticsearch:
+    <<: *defaults
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+    container_name: elasticsearch
+    user: "1000:0"
+    ports:
+      - 9200:9200
+      - 9300:9300
+    expose:
+      - 9200
+      - 9300
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
+      - ./docker/elasticsearch/jvm.options:/usr/share/elasticsearch/config/jvm.options.d/jvm.options
+      - ./docker/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./docker/elasticsearch/log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
+    networks:
+      default:
+        aliases:
+          - elasticsearch
+          - es
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 0s
+        max_attempts: 10
+        window: 3s
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 2GB
+        reservations:
+          cpus: '1.00'
+          memory: 1.5GB
+
 volumes:
+  elasticsearch:
+    external: true
+    name: elasticsearch
   redis-datadir:
     external: true
     name: redis-datadir

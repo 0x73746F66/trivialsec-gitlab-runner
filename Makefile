@@ -16,6 +16,7 @@ NAME_CI     = registry.gitlab.com/trivialsec/containers-common/gitlab-runner
 setup: ## Creates docker networks and volumes
 	docker network create trivialsec 2>/dev/null || true
 	docker volume create --name=redis-datadir 2>/dev/null || true
+	docker volume create --name=elasticsearch 2>/dev/null || true
 	docker volume create --name=mysql-main-data 2>/dev/null || true
 	docker volume create --name=mysql-replica-data 2>/dev/null || true
 	docker volume create --name=gitlab-cache 2>/dev/null || true
@@ -129,7 +130,7 @@ redis-flush:
 	docker-compose exec redis redis-cli FLUSHALL
 
 up: update ## Starts latest container images for: redis, mysql
-	docker-compose up -d redis mysql-main mysql-replica
+	docker-compose up -d redis network.host: mysql-replica elasticsearch
 
 down: ## Bring down containers
 	docker-compose down --remove-orphans
