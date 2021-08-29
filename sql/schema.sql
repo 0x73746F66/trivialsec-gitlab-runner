@@ -269,30 +269,6 @@ CREATE TABLE IF NOT EXISTS domain_stats (
     INDEX index_domain_stats_stat (domain_id, domain_stat)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS cve_exploits (
-    `cve_id` VARCHAR(16) NOT NULL,
-    `source` VARCHAR(255) NOT NULL,
-    `source_id` VARCHAR(255) NOT NULL,
-    `source_url` TEXT DEFAULT NULL,
-    `title` TEXT DEFAULT NULL,
-    `published_at` DATE NOT NULL,
-    `author` VARCHAR(255) NOT NULL,
-    `author_url` TEXT DEFAULT NULL,
-    `verified` TINYINT DEFAULT '0',
-    CONSTRAINT pk_cve_exploits PRIMARY KEY (`cve_id`, `source_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS cve_remediation (
-    `cve_id` VARCHAR(16) NOT NULL,
-    `type` VARCHAR(255) NOT NULL,
-    `source` VARCHAR(255) NOT NULL,
-    `source_id` VARCHAR(255) NOT NULL,
-    `source_url` TEXT DEFAULT NULL,
-    `description` TEXT DEFAULT NULL,
-    `published_at` DATETIME DEFAULT NULL,
-    CONSTRAINT pk_cve_remediation PRIMARY KEY (`cve_id`, `source_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 CREATE TABLE IF NOT EXISTS findings (
     `finding_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `finding_detail_id` VARCHAR(255) NOT NULL,
