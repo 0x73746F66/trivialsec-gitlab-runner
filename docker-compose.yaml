@@ -202,6 +202,8 @@ services:
     expose:
       - 9200
       - 9300
+    environment:
+      ELASTIC_PASSWORD: "${TF_VAR_elasticsearch_password}"
     volumes:
       - elasticsearch:/usr/share/elasticsearch/data
       - ./docker/elasticsearch/jvm.options:/usr/share/elasticsearch/config/jvm.options.d/jvm.options

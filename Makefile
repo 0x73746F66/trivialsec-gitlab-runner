@@ -130,7 +130,7 @@ redis-flush:
 	docker-compose exec redis redis-cli FLUSHALL
 
 up: update ## Starts latest container images for: redis, mysql
-	docker-compose up -d redis network.host: mysql-replica elasticsearch
+	docker-compose up -d redis mysql-main mysql-replica elasticsearch
 
 down: ## Bring down containers
 	docker-compose down --remove-orphans
@@ -148,3 +148,9 @@ run-local-runner: build-local-runner ## run a local gitlab-runner
 		-v "/var/run/docker.sock:/var/run/docker.sock:rw" \
 		-e RUNNER_TOKEN=${RUNNER_TOKEN} \
 		$(NAME_CI):local
+
+es-unknown-sources:
+	curl --location --request GET 'http://elastic:${ELASTIC_PASSWORD}@localhost:9200/_search' --header 'Content-Type: application/json' --data-raw '{"query": {"match": {"assigner": "Unknown"}}}' | jq '.hits.hits[]._id'
+
+es-cves:
+	curl --location --request GET 'http://elastic:${ELASTIC_PASSWORD}@localhost:9200/cves/_stats' | jq -CS
