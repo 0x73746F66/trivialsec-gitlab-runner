@@ -240,34 +240,19 @@ CREATE TABLE IF NOT EXISTS projects (
     CONSTRAINT pk_projects PRIMARY KEY (project_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
 
-CREATE TABLE IF NOT EXISTS domains (
-    `domain_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `parent_domain_id` BIGINT UNSIGNED DEFAULT NULL,
+CREATE TABLE IF NOT EXISTS domain_monitoring (
+    `domain_monitoring_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `domain_name` VARCHAR(255) NOT NULL,
     `account_id` BIGINT UNSIGNED NOT NULL,
     `project_id` BIGINT UNSIGNED NOT NULL,
-    `source` VARCHAR(255) NOT NULL,
-    `name` VARCHAR(255) NOT NULL,
     `schedule` VARCHAR(255) DEFAULT NULL,
     `enabled` TINYINT NOT NULL DEFAULT '0',
     `created_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `deleted` TINYINT NOT NULL DEFAULT '0',
-    CONSTRAINT pk_domains PRIMARY KEY (domain_id),
-    INDEX index_domains_parent_domain_id (parent_domain_id),
-    INDEX index_domains_account_id (account_id),
-    INDEX index_domains_project_id (project_id)
+    CONSTRAINT pk_domain_monitoring PRIMARY KEY (domain_monitoring_id),
+    INDEX index_domain_monitoring_domain_name (domain_name),
+    INDEX index_domain_monitoring_account_id (account_id),
+    INDEX index_domain_monitoring_project_id (project_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
-
-CREATE TABLE IF NOT EXISTS domain_stats (
-    `domain_stats_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `domain_id` BIGINT UNSIGNED NOT NULL,
-    `domain_stat` VARCHAR(255) NOT NULL,
-    `domain_value` VARCHAR(255) DEFAULT NULL,
-    `domain_data` TEXT DEFAULT NULL,
-    `created_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT pk_domain_stats PRIMARY KEY (domain_stats_id),
-    INDEX index_domain_stats_domain_id (domain_id),
-    INDEX index_domain_stats_stat (domain_id, domain_stat)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS findings (
     `finding_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -357,43 +342,6 @@ CREATE TABLE IF NOT EXISTS job_runs (
     CONSTRAINT pk_job_runs PRIMARY KEY (job_run_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS dns_records (
-    `dns_record_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `domain_id` BIGINT UNSIGNED NOT NULL,
-    `ttl` int UNSIGNED NOT NULL,
-    `dns_class` VARCHAR(255) NOT NULL,
-    `resource` VARCHAR(255) NOT NULL,
-    `answer` TEXT NOT NULL,
-    `raw` TEXT NOT NULL,
-    `last_checked` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT pk_dnsrecords PRIMARY KEY (dns_record_id),
-    INDEX index_dns_records_domain_id (domain_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS programs (
-    `program_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(255) NOT NULL,
-    `external_url` VARCHAR(255) DEFAULT NULL,
-    `icon_url` VARCHAR(255) DEFAULT NULL,
-    `category` VARCHAR(255) NOT NULL,
-    CONSTRAINT pk_programs PRIMARY KEY (program_id),
-    INDEX index_programs_name (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS inventory_items (
-    `inventory_item_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `program_id` BIGINT UNSIGNED NOT NULL,
-    `project_id` BIGINT UNSIGNED NOT NULL,
-    `domain_id` BIGINT UNSIGNED DEFAULT NULL,
-    `version` VARCHAR(255) DEFAULT NULL,
-    `source_description` TEXT NOT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `last_checked` DATETIME DEFAULT NULL,
-    CONSTRAINT pk_inventory PRIMARY KEY (inventory_item_id),
-    INDEX index_inventory_project_id (project_id),
-    INDEX index_inventory_domain_id (domain_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 CREATE TABLE IF NOT EXISTS security_alerts (
     `security_alert_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `account_id` BIGINT UNSIGNED NOT NULL,
@@ -405,21 +353,6 @@ CREATE TABLE IF NOT EXISTS security_alerts (
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_security_alerts PRIMARY KEY (security_alert_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS known_ips (
-    `known_ip_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `account_id` BIGINT UNSIGNED NOT NULL,
-    `project_id` BIGINT UNSIGNED DEFAULT NULL,
-    `domain_id` BIGINT UNSIGNED DEFAULT NULL,
-    `ip_address` VARCHAR(255) NOT NULL,
-    `ip_version` VARCHAR(4) NOT NULL,
-    `source` VARCHAR(255) NOT NULL,
-    `asn_code` int DEFAULT NULL,
-    `asn_name` VARCHAR(255) DEFAULT NULL,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT pk_knownips PRIMARY KEY (known_ip_id),
-    INDEX index_known_ips_domain_id (domain_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
 
 CREATE TABLE IF NOT EXISTS feeds (
     `feed_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
