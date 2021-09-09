@@ -5,7 +5,6 @@ INSERT INTO roles ( `name` ) VALUES ( 'Billing' );
 INSERT INTO roles ( `name` ) VALUES ( 'Read Only' );
 INSERT INTO roles ( `name` ) VALUES ( 'Audit' );
 INSERT INTO roles ( `name`, `internal_only` ) VALUES ( 'Support', 1 );
-
 INSERT INTO accounts ( `alias`, `billing_email`, `socket_key`, `verification_hash` ) VALUES ( 'root', 'accounts@trivialsec.com', '886313e1-3b8a-5372-9b90-0c9aee199e5d', 'oajrzBUbE42xvAi07CTLljRSiQTNdzR9OHhzB5zLXiA');
 INSERT INTO members ( `email`, `account_id`, `scratch_code`, `verified`, `confirmation_url` ) VALUES ( 'support@trivialsec.com', 1, 'D954-49B2DE-FC6276C6-ECDA2E', 0, '/confirmation/dev-setup');
 INSERT INTO members_roles ( `member_id`, `role_id` ) VALUES ( 1, 1 );
@@ -13,28 +12,72 @@ INSERT INTO members_roles ( `member_id`, `role_id` ) VALUES ( 1, 5 );
 INSERT INTO api_keys (`api_key`, `api_key_secret`, `comment`, `member_id`, `active`) VALUES ('0CBD6369526457CEBEA116273EBF1FCB', 'aca3d029ee5650eb8f8467aa22136e5d', 'public-api', 1, 1);
 INSERT INTO webhooks (`account_id`, `webhook_secret`, `comment`, `target`, `active`) VALUES (1, '38B7329E11F45058A6D4389AC792631A', 'webhook', 'https://api.trivialsec/webhooks/trivialsec', 1);
 INSERT INTO plans (`account_id`, `name`, `stripe_customer_id`) VALUES (1, 'Internal', 'cus_IjA67Itbk3PAjp');
-
 INSERT INTO account_config (
     `account_id`
 ) VALUES (
     1
 );
-
-INSERT INTO service_types ( `name`, `category` ) VALUES ( 'spect', 'fingerprinting');
-INSERT INTO service_types ( `name`, `category` ) VALUES ( 'amass', 'subdomains');
-INSERT INTO service_types ( `name`, `category` ) VALUES ( 'nmap', 'network');
-INSERT INTO service_types ( `name`, `category` ) VALUES ( 'testssl', 'dast');
-INSERT INTO service_types ( `name`, `category` ) VALUES ( 'splash', 'crawler');
-INSERT INTO service_types ( `name`, `category` ) VALUES ( 'nikto2', 'dast');
-INSERT INTO service_types ( `name`, `category` ) VALUES ( 'zap', 'dast');
-INSERT INTO service_types ( `name`, `category` ) VALUES ( 'dependency-check', 'sca');
-INSERT INTO service_types ( `name`, `category` ) VALUES ( 'drill', 'fingerprinting');
-INSERT INTO service_types ( `name`, `category` ) VALUES ( 'retirejs', 'sca');
-INSERT INTO service_types ( `name`, `category` ) VALUES ( 'git-secrets', 'secrets');
-INSERT INTO service_types ( `name`, `category` ) VALUES ( 'exposed-repos', 'secrets');
-INSERT INTO service_types ( `name`, `category` ) VALUES ( 'dsstore', 'secrets');
-INSERT INTO service_types ( `name`, `category` ) VALUES ( 'phonito', 'sast');
-INSERT INTO service_types ( `name`, `category` ) VALUES ( 'metadata', 'crawler');
+INSERT INTO
+  `service_types` (`category`, `name`, `service_type_id`)
+VALUES
+  ('fingerprinting', 'dce-rpc', '1'),
+  ('subdomains', 'amass', '2'),
+  ('network', 'nmap', '3'),
+  ('dast', 'testssl', '4'),
+  ('crawler', 'link-crawler', '5'),
+  ('dast', 'nikto2', '6'),
+  ('dast', 'owasp-zap', '7'),
+  ('sca', 'dependency-check', '8'),
+  ('fingerprinting', 'drill', '9'),
+  ('crawler', 'screenshot', '10'),
+  ('secrets', 'git-secrets', '11'),
+  ('secrets', 'exposed-repos', '12'),
+  ('secrets', 'dsstore', '13'),
+  ('sast', 'containers', '14'),
+  ('crawler', 'metadata', '15'),
+  ('crawler', 'git', '16'),
+  ('crawler', 'orphaned-files', '17'),
+  ('dast', 'subdomain-takeover', '18'),
+  ('dast', 'saas-takeover', '19'),
+  ('dast', 'dns-fronting', '20'),
+  ('dast', 'cname-collusion', '21'),
+  ('dast', 'starttls-bugs', '22'),
+  ('osint', 'pwnedkeys', '23'),
+  ('dast', 'http-desync', '24'),
+  ('dast', 'request-smuggler', '25'),
+  ('dast', 'ldap', '26'),
+  ('osint', 'vpn-detect', '27'),
+  ('dast', 'kerberoaster', '28'),
+  ('dast', 'joomla', '29'),
+  ('dast', 'wordpress', '30'),
+  ('dast', 'compression-bugs', '31'),
+  ('osint', 'anti-bruteforce', '32'),
+  ('dast', 'xss-tester', '33'),
+  ('dast', 'file-protocols', '34'),
+  ('network', 'popped-shells', '35'),
+  ('network', 'reflected-ddos', '36'),
+  ('crawler', 'dsstore', '37'),
+  ('dast', 'oauth2-checker', '38'),
+  ('sast', 'semgrep-javascript', '39'),
+  ('sast', 'npm-audit', '40'),
+  ('sast', 'eslint-plugin-security', '41'),
+  ('sast', 'nodejsscan', '42'),
+  ('sast', 'semgrep-react', '43'),
+  ('sast', 'bandit', '44'),
+  ('sast', 'ossaudit', '45'),
+  ('sast', 'semgrep-ruby', '46'),
+  ('sast', 'minusworld-ruby-on-rails-xss', '47'),
+  ('sast', 'flask-xss', '48'),
+  ('sast', 'semgrep-r2c-ci', '49'),
+  ('sast', 'command-injection', '50'),
+  ('sast', 'insecure-transport', '51'),
+  ('sast', 'jwt', '52'),
+  ('sast', 'secrets', '53'),
+  ('sast', 'dockerfile', '54'),
+  ('sast', 'docker-compose', '55'),
+  ('sast', 'security-audit', '56'),
+  ('sast', 'findsecbugs', '57'),
+  ('sast', 'secret-strings', '58');
 
 INSERT INTO `feeds`
 VALUES (
