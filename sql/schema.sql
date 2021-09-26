@@ -1,6 +1,6 @@
 CREATE DATABASE IF NOT EXISTS trivialsec;
 USE trivialsec;
-SET time_zone = '+00:00'
+SET time_zone = '+00:00';
 
 CREATE TABLE IF NOT EXISTS accounts (
     `account_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
