@@ -17,8 +17,6 @@ setup: ## Creates docker networks and volumes
 	docker network create trivialsec 2>/dev/null || true
 	docker volume create --name=redis-datadir 2>/dev/null || true
 	docker volume create --name=elasticsearch 2>/dev/null || true
-	docker volume create --name=mysql-main-data 2>/dev/null || true
-	docker volume create --name=mysql-replica-data 2>/dev/null || true
 	docker volume create --name=gitlab-cache 2>/dev/null || true
 
 buildci-py: ## build python image
@@ -101,36 +99,11 @@ docker-login: ## login to docker cli using $DOCKER_USER and $DOCKER_PASSWORD
 	@echo $(shell [ -z "${DOCKER_PASSWORD}" ] && echo "DOCKER_PASSWORD missing" )
 	@echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin registry.gitlab.com
 
-docker-clean: ## quick docker environment cleanup
-	docker rmi $(docker images -qaf "dangling=true")
-	yes | docker system prune
-	sudo service docker restart
-
-docker-purge: ## thorough docker environment cleanup
-	docker rmi $(docker images -qa)
-	yes | docker system prune
-	sudo service docker stop
-	sudo rm -rf /tmp/docker.backup/
-	sudo cp -Pfr /var/lib/docker /tmp/docker.backup
-	sudo rm -rf /var/lib/docker
-	sudo service docker start
-
-db-create: ## applies mysql schema and initial data
-	docker-compose exec mysql-main bash -c "mysql -uroot -p'$(MYSQL_MAIN_PASSWORD)' -q -s < /tmp/sql/schema.sql"
-	docker-compose exec mysql-main bash -c "mysql -uroot -p'$(MYSQL_MAIN_PASSWORD)' -q -s < /tmp/sql/init-data.sql"
-
-db-rebuild: ## runs drop tables sql script, then applies mysql schema and initial data
-	docker-compose up -d mysql-main
-	sleep 5
-	docker-compose exec mysql-main bash -c "mysql -uroot -p'$(MYSQL_MAIN_PASSWORD)' -q -s < /tmp/sql/drop-tables.sql"
-	docker-compose exec mysql-main bash -c "mysql -uroot -p'$(MYSQL_MAIN_PASSWORD)' -q -s < /tmp/sql/schema.sql"
-	docker-compose exec mysql-main bash -c "mysql -uroot -p'$(MYSQL_MAIN_PASSWORD)' -q -s < /tmp/sql/init-data.sql"
-
 redis-flush:
 	docker-compose exec redis redis-cli FLUSHALL
 
 up: update ## Starts latest container images for: redis, mysql
-	docker-compose up -d redis mysql-main mysql-replica elasticsearch
+	docker-compose up -d redis elasticsearch
 
 down: ## Bring down containers
 	docker-compose down --remove-orphans

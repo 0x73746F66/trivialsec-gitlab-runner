@@ -1,3 +1,0 @@
-[mysqld]
-relay-log = /var/lib/mysql/mysql-relay-bin.log
-server-id = 2
