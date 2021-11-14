@@ -16,7 +16,6 @@ NAME_CI     = registry.gitlab.com/trivialsec/containers-common/gitlab-runner
 setup: ## Creates docker networks and volumes
 	docker network create trivialsec 2>/dev/null || true
 	docker volume create --name=redis-datadir 2>/dev/null || true
-	docker volume create --name=elasticsearch 2>/dev/null || true
 	docker volume create --name=gitlab-cache 2>/dev/null || true
 
 buildci-py: ## build python image
@@ -121,9 +120,3 @@ run-local-runner: build-local-runner ## run a local gitlab-runner
 		-v "/var/run/docker.sock:/var/run/docker.sock:rw" \
 		-e RUNNER_TOKEN=${RUNNER_TOKEN} \
 		$(NAME_CI):local
-
-es-unknown-sources:
-	curl --location --request GET 'http://elastic:${ELASTIC_PASSWORD}@localhost:9200/_search' --header 'Content-Type: application/json' --data-raw '{"query": {"match": {"assigner": "Unknown"}}}' | jq '.hits.hits[]._id'
-
-es-cves:
-	curl --location --request GET 'http://elastic:${ELASTIC_PASSWORD}@localhost:9200/cves/_stats' | jq -CS
