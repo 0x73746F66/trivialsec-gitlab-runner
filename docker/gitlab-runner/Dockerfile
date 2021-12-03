@@ -45,6 +45,6 @@ RUN chmod a+x /entrypoint \
     && apt-get clean \
     && rm -rf /tmp/* /var/lib/apt/lists/* \
     && terraform -install-autocomplete \
-    && python3 -m pip install -q --no-cache-dir -U pip setuptools wheel awscli pylint semgrep
+    && python3 -m pip install -q --no-cache-dir -U pip setuptools wheel build twine awscli pylint semgrep
 
 VOLUME [ "/etc/gitlab-runner" ]

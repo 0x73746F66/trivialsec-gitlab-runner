@@ -13,9 +13,12 @@ NAME_NODE 	= registry.gitlab.com/trivialsec/containers-common/nodejs
 NAME_WAF    = registry.gitlab.com/trivialsec/containers-common/waf
 NAME_CI     = registry.gitlab.com/trivialsec/containers-common/gitlab-runner
 
+ifndef CI_BUILD_REF
+	CI_BUILD_REF = local
+endif
+
 setup: ## Creates docker networks and volumes
 	docker network create trivialsec 2>/dev/null || true
-	docker volume create --name=redis-datadir 2>/dev/null || true
 	docker volume create --name=gitlab-cache 2>/dev/null || true
 
 buildci-py: ## build python image
@@ -89,23 +92,9 @@ pushci-runner: ## push built gitlab-runner image
 build-ci: buildci-py buildci-node buildci-waf buildci-runner ## build docker images
 push-ci: pushci-py pushci-node pushci-waf pushci-runner ## push built images
 
-update: ## pulls images
-	docker-compose pull
-
-rebuild: down build-ci ## alias for down && build-ci
-
 docker-login: ## login to docker cli using $DOCKER_USER and $DOCKER_PASSWORD
 	@echo $(shell [ -z "${DOCKER_PASSWORD}" ] && echo "DOCKER_PASSWORD missing" )
 	@echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin registry.gitlab.com
-
-redis-flush:
-	docker-compose exec redis redis-cli FLUSHALL
-
-up: update ## Starts latest container images for: redis, mysql
-	docker-compose up -d redis elasticsearch
-
-down: ## Bring down containers
-	docker-compose down --remove-orphans
 
 build-local-runner: ## build a local gitlab-runner
 	docker build -q \
