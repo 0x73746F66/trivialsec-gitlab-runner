@@ -21,8 +21,8 @@ Included commands;
 
 - terraform
 - semgrep
-- python3.8
-- python3.8 -m pip
+- python3
+- python3 -m pip
 - wheel
 - pylint
 - zip / unzip

@@ -13,9 +13,9 @@ RUN chmod a+x /entrypoint \
     && apt-get install -y --no-install-recommends \
         acl \
         build-essential \
-        python3.8 \
-        python3.8-distutils \
-        python3.8-dev \
+        python3 \
+        python3-distutils \
+        python3-dev \
         python3-venv \
         unzip \
         gzip \

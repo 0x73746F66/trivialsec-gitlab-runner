@@ -92,9 +92,9 @@ pushci-runner: ## push built gitlab-runner image
 build-ci: buildci-py buildci-node buildci-waf buildci-runner ## build docker images
 push-ci: pushci-py pushci-node pushci-waf pushci-runner ## push built images
 
-docker-login: ## login to docker cli using $DOCKER_USER and $DOCKER_PASSWORD
-	@echo $(shell [ -z "${DOCKER_PASSWORD}" ] && echo "DOCKER_PASSWORD missing" )
-	@echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin registry.gitlab.com
+docker-login: ## login to docker cli using $GITLAB_USER and $GITLAB_PAT
+	@echo $(shell [ -z "${GITLAB_PAT}" ] && echo "GITLAB_PAT missing" )
+	@echo ${GITLAB_PAT} | docker login -u ${GITLAB_USER} --password-stdin registry.gitlab.com
 
 build-local-runner: ## build a local gitlab-runner
 	docker build -q \
