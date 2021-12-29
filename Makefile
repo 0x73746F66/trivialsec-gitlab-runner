@@ -8,9 +8,6 @@ help: ## This help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 .DEFAULT_GOAL := help
-NAME_PY 	= registry.gitlab.com/trivialsec/containers-common/python
-NAME_NODE 	= registry.gitlab.com/trivialsec/containers-common/nodejs
-NAME_WAF    = registry.gitlab.com/trivialsec/containers-common/waf
 NAME_CI     = registry.gitlab.com/trivialsec/containers-common/gitlab-runner
 
 ifndef CI_BUILD_REF
@@ -38,36 +35,6 @@ buildci-py: ## build python image
 pushci-py: ## push built python image
 	docker push -q $(NAME_PY):${CI_BUILD_REF}
 	docker push -q $(NAME_PY):latest
-
-buildci-node: ## build nodejs image
-	docker pull -q $(NAME_NODE):latest
-	docker build -q --compress \
-		--cache-from $(NAME_NODE):latest \
-		-t $(NAME_NODE):${CI_BUILD_REF} \
-		-t $(NAME_NODE):latest \
-		--build-arg NODE_ENV=${NODE_ENV} \
-        --build-arg NODE_PATH=${NODE_PATH} \
-		./docker/node
-
-pushci-node: ## push built nodejs image
-	docker push -q $(NAME_NODE):${CI_BUILD_REF}
-	docker push -q $(NAME_NODE):latest
-
-buildci-waf: ## build waf image
-	docker pull -q $(NAME_WAF):latest
-	docker build -q --compress \
-		--cache-from $(NAME_WAF):latest \
-		-t $(NAME_WAF):${CI_BUILD_REF} \
-		-t $(NAME_WAF):latest \
-		--build-arg NGINX_VERSION=${NGINX_VERSION} \
-        --build-arg GEO_DB_RELEASE=${GEO_DB_RELEASE} \
-        --build-arg MODSEC_BRANCH=${MODSEC_BRANCH} \
-        --build-arg OWASP_BRANCH=${OWASP_BRANCH} \
-		./docker/waf
-
-pushci-waf: ## push built waf image
-	docker push -q $(NAME_WAF):${CI_BUILD_REF}
-	docker push -q $(NAME_WAF):latest
 
 deploy-key: ## fetches the gitlab-ci deploy key
 ifdef AWS_PROFILE
@@ -97,7 +64,7 @@ docker-login: ## login to docker cli using $GITLAB_USER and $GITLAB_PAT
 	@echo ${GITLAB_PAT} | docker login -u ${GITLAB_USER} --password-stdin registry.gitlab.com
 
 build-local-runner: ## build a local gitlab-runner
-	docker build -q \
+	docker build \
 		--cache-from $(NAME_CI):latest \
 		-t $(NAME_CI):local \
 		./docker/gitlab-runner
@@ -109,3 +76,11 @@ run-local-runner: build-local-runner ## run a local gitlab-runner
 		-v "/var/run/docker.sock:/var/run/docker.sock:rw" \
 		-e RUNNER_TOKEN=${RUNNER_TOKEN} \
 		$(NAME_CI):local
+	docker exec -ti gitlab-runner gitlab-runner register --non-interactive \
+		--tag-list 'builder,linode' \
+		--name trivialsec-shared \
+		--request-concurrency 5 \
+		--url https://gitlab.com/ \
+		--registration-token '$(RUNNER_TOKEN)' \
+		--cache-dir '/cache' \
+		--executor shell
