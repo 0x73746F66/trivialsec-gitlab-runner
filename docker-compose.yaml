@@ -9,7 +9,7 @@ x-defaults: &defaults
 services:
   gitlab-runner:
     <<: *defaults
-    image: registry.gitlab.com/trivialsec/containers-common/gitlab-runner
+    image: registry.gitlab.com/trivialsec/gitlab-runner
     build:
       context: .
       dockerfile: Dockerfile
