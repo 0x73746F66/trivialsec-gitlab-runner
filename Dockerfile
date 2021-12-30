@@ -6,8 +6,8 @@ ENV CFLAGS="-O0"
 ENV STATICBUILD=true
 ENV PATH=$PATH:/usr/local/go/bin
 
-COPY config.toml /etc/gitlab-runner/config.toml
-COPY entrypoint /entrypoint
+COPY conf/config.toml /etc/gitlab-runner/config.toml
+COPY conf/entrypoint /entrypoint
 RUN chmod a+x /entrypoint \
     && apt-get update \
     && apt-get install -y --no-install-recommends \

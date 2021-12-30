@@ -7,25 +7,11 @@ x-defaults: &defaults
       max-file: "3"
 
 services:
-  python:
-    env_file: .env
-    image: registry.gitlab.com/trivialsec/containers-common/python
-    build:
-      context: ./docker/python
-      dockerfile: Dockerfile
-      args:
-        PYTHONUNBUFFERED: 1
-        PYTHONUTF8: 1
-        CFLAGS: '-O0'
-        STATICBUILD: 1
-        LC_ALL: C.UTF-8
-        LANG: C.UTF-8
-
   gitlab-runner:
     <<: *defaults
     image: registry.gitlab.com/trivialsec/containers-common/gitlab-runner
     build:
-      context: ./docker/gitlab-runner
+      context: .
       dockerfile: Dockerfile
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:rw
@@ -49,8 +35,3 @@ volumes:
   gitlab-cache:
     external: true
     name: gitlab-cache
-
-networks:
-  default:
-    external:
-      name: trivialsec

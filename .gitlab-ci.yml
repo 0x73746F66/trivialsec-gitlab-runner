@@ -1,10 +1,4 @@
 variables:
-  NODE_ENV: production
-  NODE_PATH: /home/trivialsec/node_modules
-  NGINX_VERSION: 1.21.0
-  GEO_DB_RELEASE: 2021-06
-  MODSEC_BRANCH: v3.0.4
-  OWASP_BRANCH: v3.3/master
   GITLAB_USER: ci
 
 before_script:
@@ -17,39 +11,6 @@ stages:
   - build
   - push
 
-build:py:
-  tags:
-    - builder
-  stage: build
-  script:
-    - make buildci-py
-  only:
-    refs:
-      - merge_request
-      - main
-
-build:node:
-  tags:
-    - builder
-  stage: build
-  script:
-    - make buildci-node
-  only:
-    refs:
-      - merge_request
-      - main
-
-build:waf:
-  tags:
-    - builder
-  stage: build
-  script:
-    - make buildci-waf
-  only:
-    refs:
-      - merge_request
-      - main
-
 build:runner:
   tags:
     - builder
@@ -59,36 +20,6 @@ build:runner:
   only:
     refs:
       - merge_request
-      - main
-
-push:py:
-  tags:
-    - linode
-  stage: push
-  script:
-    - make pushci-py
-  only:
-    refs:
-      - main
-
-push:node:
-  tags:
-    - linode
-  stage: push
-  script:
-    - make pushci-node
-  only:
-    refs:
-      - main
-
-push:waf:
-  tags:
-    - builder
-  stage: push
-  script:
-    - make pushci-waf
-  only:
-    refs:
       - main
 
 push:runner:
